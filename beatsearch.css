@@ -1,0 +1,16 @@
+body, html {
+    font: 18px 'Open Sans', sans-serif;
+    margin: 0;
+    padding: 0;
+
+}
+
+body .topBar {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    background-color: lawngreen;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+}
