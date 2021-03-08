@@ -2,15 +2,266 @@ body, html {
     font: 18px 'Open Sans', sans-serif;
     margin: 0;
     padding: 0;
+    background-color: #37373a;
+}
+
+.NavBar-Container {
+    top: 0;
+    left: 0;
+    right: 0;
+    background-color: #2b2b2b;
+    position: sticky;
+}
+
+.NavBar-Container .NavBar {
+    margin: 0 auto;
+    max-width: 1280px;
+    width: 100%;
+    background-color: #2b2b2b;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 1px 0px;
+}
+
+.NavBar-Container .NavBar .NavBar-Item {
+    flex-grow: 1;
+    margin-right: 1px;
+}
+
+.NavBar-Container .NavBar .NavBar-Item a {
+    text-decoration: none;
+    align-items: center;
+    display: flex;
+    background-color: #2b2b2b;
+    color: white;
+    padding: 4px 10px;
+}
+
+.NavBar-Container .NavBar .NavBar-Item :hover{
+    background-color: #37373a;
+}
+
+.NavBar-Container .NavBar .NavBar-Item a img, .NavBar .NavBar-Item a svg {
+    text-align: center; 
+    height: 32px; 
+    padding: 0px 6px 0px 0px; 
 
 }
 
-body .topBar {
-    position: fixed;
-    top: 0;
-    width: 100%;
-    background-color: lawngreen;
+.NavBar-Container .NavBar .NavBar-Form {
+    display: flex;
+    align-self: center;
+    padding: inherit;
+}
+
+.NavBar-Container .NavBar .NavBar-Form input {
+    background-color: #646464;
+    padding-left: 8px;
+    margin-right: 1px;
+}
+
+.NavBar-Container .NavBar .NavBar-Form a {
+    text-decoration: none;
+    color: white;
+}
+
+.NavBar-Container .NavBar .NavBar-Form .NavBar-Form-Button {
+    padding: 8px;
+}
+
+.NavBar-Container .NavBar .NavBar-Form .NavBar-Form-Button :hover {
+    background-color: #37373a;
+    padding: 8px;
+    margin: 0px -8px;
+}
+
+.NavBar-Container .SearchBar {
+    max-width: 1280px;
+    margin: 0 auto;
+    background-color: #2b2b2b;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-bottom: 6px;
+}
+
+.NavBar-Container .SearchBar .SearchBar-Item a {
+    text-decoration: none;
+    color: white;
+    padding: 4px 25px;
+    background-color: #2b2b2b;
+}
+
+.NavBar-Container .SearchBar .SearchBar-Item {
+    margin-left: 8px;
+}
+
+.NavBar-Container .SearchBar .SearchBar-Item :hover {
+    background-color:#37373a;
+}
+
+.NavBar-Container .SearchBar .SearchBar-Form {
+    display: flex;
+    align-self: center;
+}
+
+.NavBar-Container .SearchBar .SearchBar-Form .SearchBar-Form-Button {
+    padding: 4px 4px;
+    background-color: #2b2b2b;
+}
+
+.NavBar-Container .SearchBar .SearchBar-Form .SearchBar-Form-Button :hover {
+    background-color:#37373a;
+    padding: 4px;
+    margin: 0px -4px;
+}
+
+.NavBar-Container .SearchBar .SearchBar-Form input {
+    background-color: #646464;
+    margin-left: 8px;
+    padding-left: 12px;
+    margin-right: 1px;
+}
+
+.NavBar-Container .SearchBar .SearchBar-Form a {
+    text-decoration: inherit;
+    color: white;
+
+}
+
+input {
+    border: none;
+    font-size: 14px;
+    color: white;
+}
+
+.DisplayArea {
+    max-width: 1280px;
+    margin: 0 auto;
+    background-color: #cfcfc;
+    display: flex;
+}
+
+.DisplayArea .SingleSong-Info {
+    margin: 0 auto;
+    border: 1px solid black;
+}
+
+.DisplayArea .SongSearch-ListDisplay .Simple-Song-Info {
+    background-color: #eeeeee;
+    margin: 8px;
+    width: 400px;
+    border-radius: 6px;
+}
+
+.DisplayArea .SongSearch-ListDisplay .Simple-Song-Info a {
+    text-decoration: none;
+}
+
+.DisplayArea .SongSearch-ListDisplay .Simple-Song-Info img {
+    max-width: 256px;
+}
+
+.DisplayArea .SongSearch-ListDisplay .Simple-Song-Info .Header-Info {
     display: flex;
     justify-content: space-between;
-    align-items: baseline;
+    padding:4px 8px;
+}
+
+.DisplayArea .SongSearch-ListDisplay .Simple-Song-Info .Cover-Image {
+    display: flex;
+    justify-content: center;
+}
+
+.DisplayArea .SongSearch-ListDisplay .Simple-Song-Info .Date-Uploaded {
+    display: flex;
+    justify-content: center;
+    padding-right: 16px;
+    padding: 4px 0px;
+}
+
+.DisplayArea .SongSearch-ListDisplay .Simple-Song-Info .SongAndUser-Info {
+    padding: 0px 10px;
+    padding-top: 4px;
+    margin-top: 4px;
+    background-color: #ddd;
+}
+
+.DisplayArea .SongSearch-ListDisplay .Simple-Song-Info .SongAndUser-Info a {
+    overflow-wrap: break-word;
+}
+
+.DisplayArea .SongSearch-ListDisplay .Simple-Song-Info .MapStats {
+    display: flex;
+    justify-content: space-evenly;
+    background-color: #fbfbfb;
+    margin: 8px 8px;
+}
+
+.DisplayArea .SongSearch-ListDisplay .Simple-Song-Info .Difs {
+    display: flex;
+    justify-content: space-evenly;
+    color: #eeeeee;
+    font-size: 14px;
+    padding-top: 6px;
+}
+
+.DisplayArea .SongSearch-ListDisplay .Simple-Song-Info .Difs .Easy {
+    padding: 4px 6px;
+    text-align: center;
+    background-color: #3cb371;
+}
+
+.DisplayArea .SongSearch-ListDisplay .Simple-Song-Info .Difs .Normal {
+    padding: 4px 6px;
+    text-align: center;
+    background-color: #59b0f4;
+}
+
+.DisplayArea .SongSearch-ListDisplay .Simple-Song-Info .Difs .Hard {
+    padding: 4px 6px;
+    text-align: center;
+    background-color: #ff6347;
+}
+
+.DisplayArea .SongSearch-ListDisplay .Simple-Song-Info .Difs .Expert {
+    padding: 4px 6px;
+    text-align: center;
+    background-color: #bf2a42;
+}
+
+.DisplayArea .SongSearch-ListDisplay .Simple-Song-Info .Difs .ExpertPlus {
+    padding: 4px 6px;
+    text-align: center;
+    background-color: #8f48db;
+}
+
+.DisplayArea .SongSearch-ListDisplay .Simple-Song-Info .Modes .Standard {
+    background-color:  #212123;
+    margin: 8px;
+    padding-bottom: 8px;
+    color: #eeeeee;
+    border-radius: 6px;
+}
+
+.DisplayArea .SongSearch-ListDisplay .Simple-Song-Info .Modes .Standard .Mode-Title {
+    margin-left: 10px;
+    padding-top: 4px;
+}
+
+
+.DisplayArea .SongSearch-ListDisplay .Simple-Song-Info .Download-Stuff {
+    display: flex;
+    justify-content: space-evenly;
+}
+.DisplayArea .SongSearch-ListDisplay .Simple-Song-Info .Download-Stuff a {
+    flex-grow: 2;
+    text-align: center;
+    padding: 6px 0px;
+    margin-top: 4px;
+}
+.DisplayArea .SongSearch-ListDisplay .Simple-Song-Info .Download-Stuff a:hover {
+background-color: #e2e2e2;
+border-radius: 6px;
 }
