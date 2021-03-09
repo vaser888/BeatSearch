@@ -22,6 +22,7 @@ body, html {
     justify-content: space-around;
     align-items: center;
     padding: 1px 0px;
+    flex-wrap: wrap;
 }
 
 .NavBar-Container .NavBar .NavBar-Item {
@@ -84,6 +85,7 @@ body, html {
     align-items: center;
     justify-content: center;
     padding-bottom: 6px;
+    flex-wrap: wrap;
 }
 
 .NavBar-Container .SearchBar .SearchBar-Item a {
@@ -139,7 +141,6 @@ input {
 .DisplayArea {
     max-width: 1280px;
     margin: 0 auto;
-    background-color: #cfcfc;
     display: flex;
 }
 
@@ -148,8 +149,15 @@ input {
     border: 1px solid black;
 }
 
+.DisplayArea .SongSearch-ListDisplay {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+    margin: inherit;
+}
+
 .DisplayArea .SongSearch-ListDisplay .Simple-Song-Info {
-    background-color: #eeeeee;
+    background-color: #dfdfdf;
     margin: 8px;
     width: 400px;
     border-radius: 6px;
@@ -157,6 +165,7 @@ input {
 
 .DisplayArea .SongSearch-ListDisplay .Simple-Song-Info a {
     text-decoration: none;
+    color: #451ba2;;
 }
 
 .DisplayArea .SongSearch-ListDisplay .Simple-Song-Info img {
@@ -185,7 +194,8 @@ input {
     padding: 0px 10px;
     padding-top: 4px;
     margin-top: 4px;
-    background-color: #ddd;
+    background-color: #f5f5f5;
+    box-shadow: 0px -12px 30px -18px;
 }
 
 .DisplayArea .SongSearch-ListDisplay .Simple-Song-Info .SongAndUser-Info a {
@@ -195,14 +205,14 @@ input {
 .DisplayArea .SongSearch-ListDisplay .Simple-Song-Info .MapStats {
     display: flex;
     justify-content: space-evenly;
-    background-color: #fbfbfb;
+    background-color: #e4b8b891;
     margin: 8px 8px;
 }
 
 .DisplayArea .SongSearch-ListDisplay .Simple-Song-Info .Difs {
     display: flex;
     justify-content: space-evenly;
-    color: #eeeeee;
+    color: #fdfdfd;
     font-size: 14px;
     padding-top: 6px;
 }
@@ -211,37 +221,42 @@ input {
     padding: 4px 6px;
     text-align: center;
     background-color: #3cb371;
+    flex-grow: 1;
 }
 
 .DisplayArea .SongSearch-ListDisplay .Simple-Song-Info .Difs .Normal {
     padding: 4px 6px;
     text-align: center;
     background-color: #59b0f4;
+    flex-grow: 1;
 }
 
 .DisplayArea .SongSearch-ListDisplay .Simple-Song-Info .Difs .Hard {
     padding: 4px 6px;
     text-align: center;
     background-color: #ff6347;
+    flex-grow: 1;
 }
 
 .DisplayArea .SongSearch-ListDisplay .Simple-Song-Info .Difs .Expert {
     padding: 4px 6px;
     text-align: center;
     background-color: #bf2a42;
+    flex-grow: 1;
 }
 
 .DisplayArea .SongSearch-ListDisplay .Simple-Song-Info .Difs .ExpertPlus {
     padding: 4px 6px;
     text-align: center;
     background-color: #8f48db;
+    flex-grow: 1;
 }
 
 .DisplayArea .SongSearch-ListDisplay .Simple-Song-Info .Modes .Standard {
     background-color:  #212123;
     margin: 8px;
     padding-bottom: 8px;
-    color: #eeeeee;
+    color: #b5b5b5;
     border-radius: 6px;
 }
 
@@ -262,6 +277,38 @@ input {
     margin-top: 4px;
 }
 .DisplayArea .SongSearch-ListDisplay .Simple-Song-Info .Download-Stuff a:hover {
-background-color: #e2e2e2;
+background-color: #f2f2f2;
 border-radius: 6px;
+}
+
+
+.Footer-Nav {
+    display: flex;
+    justify-content: space-evenly;
+    position: sticky;
+    bottom: 0;
+    align-items: baseline;
+    background-color: lawngreen;
+}
+.Footer-Nav a {
+    background-color: #f5f5f5;
+    flex-grow: 2;
+    text-align: center;
+    padding: 10px;
+}
+
+.Footer-Nav input {
+    color: black;
+    font-size: 18px;
+}
+
+.Site-Info {
+    display: flex;
+    justify-content: center;
+}
+
+footer {
+    display: contents;
+    position: absolute;
+    bottom: 0;
 }
