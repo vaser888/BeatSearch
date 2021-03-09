@@ -36,7 +36,7 @@ body, html {
     display: flex;
     background-color: #2b2b2b;
     color: white;
-    padding: 4px 10px;
+    padding: 4px 8px;
 }
 
 .NavBar-Container .NavBar .NavBar-Item :hover{
@@ -142,6 +142,7 @@ input {
     max-width: 1280px;
     margin: 0 auto;
     display: flex;
+    min-height: 1000px;
 }
 
 .DisplayArea .SingleSong-Info {
@@ -299,7 +300,12 @@ border-radius: 6px;
 
 .Footer-Nav input {
     color: black;
-    font-size: 18px;
+    font-size: 14px;
+}
+
+.Footer-Nav .Footer-Page {
+    padding: 8px;
+    display: flex;
 }
 
 .Site-Info {

@@ -1,8 +1,12 @@
 
+window.onload = function(){
+
+
+}
+
 var JsonData;
 var t;
 
-GetData("hot",0);
 
 function GetData(Type, Page) {
     fetch("https://beatsaver.com/api/maps/" + Type + "/" + Page + "?automapper=1").then(function (r) { return r.json() }).then(function (JsonData0) {
@@ -227,10 +231,12 @@ function CreateSimpleSongInfo(Data0) {
     DivDownloadStuff.appendChild(A3);
     DivSimpleSongInfo.appendChild(DivDownloadStuff);
 
-
-
     console.log(p);
 
-
     document.getElementById("SongSearch-ListDisplay").appendChild(DivSimpleSongInfo);
+}
+
+
+function test() {
+    event.preventDefault();
 }
