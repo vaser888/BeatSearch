@@ -1,17 +1,17 @@
 
 window.onload = function(){
-
-
+    
+    if (history.state === null){
+        console.log("lol");
+    }
 }
 
 var JsonData;
 var t;
 
-
 function GetData(Type, Page) {
     fetch("https://beatsaver.com/api/maps/" + Type + "/" + Page + "?automapper=1").then(function (r) { return r.json() }).then(function (JsonData0) {
-        
-        console.log(JsonData0);
+        //console.log(JsonData0);
         var t;  
         var TotalMaps = JsonData0.totalDocs;
         /*if(Type ==="detail") {
@@ -43,11 +43,17 @@ function GetData(Type, Page) {
             if (BotTest === "Beat Sage") {
             }
             else {
-                console.log(i, BotTest);
+                //console.log(i, BotTest);
                 CreateSimpleSongInfo(i);
             }
+        }
+        document.getElementById("NumberOfPages").innerHTML = "of " + (JsonData0.lastPage + 1);
+        var p = window.history.state;
+        let StateObj = {SearchType: Type, CurPageNum: Page, DisplayType: p.DisplayType ,TotalPageNumber: JsonData0.lastPage};
+        window.history.replaceState(StateObj, "", "");
+        console.log(window.history.state);
+    }).catch(function(){
 
-    }
     });
 }
 
@@ -83,7 +89,7 @@ function CreateSimpleSongInfo(Data0) {
     var DivDateUp = document.createElement("div");
     var d = Data0[2];
     var LocalDate = new Date (d);
-    DivDateUp.innerHTML = LocalDate.toLocaleString("en-US", {hour12:true, year:"numeric", month:"numeric", day:"numeric", hour:"numeric", minute:"numeric"});
+    DivDateUp.innerHTML = LocalDate.toLocaleString("en-GB", {hour12:true, year:"numeric", month:"numeric", day:"numeric", hour:"numeric", minute:"numeric"});
     DivDateUp.setAttribute("class", "Date-Uploaded");
     DivSimpleSongInfo.appendChild(DivDateUp);
 
@@ -120,13 +126,14 @@ function CreateSimpleSongInfo(Data0) {
     var time = Data0[6];
     var min = Math.floor(time/60);
     var sec = time % 60;
+    sec = sec < 10 ? "0" + sec : sec;
     Div1.innerHTML = min + ":" + sec + " 🕔";
     Div2.innerHTML = Data0[7].upVotes + " 👍";
     Div3.innerHTML = Data0[7].downVotes + " 👎";
     Div4.innerHTML = Data0[7].downloads + " 💾";
     var Rating = Data0[7].rating;
     Rating = Math.round(Rating * 10000)/100;
-    Div5.innerHTML = Rating + " 💯";
+    Div5.innerHTML = Rating + "% 💯";
     DivMapStats.appendChild(Div1);
     DivMapStats.appendChild(Div2);
     DivMapStats.appendChild(Div3);
@@ -231,12 +238,129 @@ function CreateSimpleSongInfo(Data0) {
     DivDownloadStuff.appendChild(A3);
     DivSimpleSongInfo.appendChild(DivDownloadStuff);
 
-    console.log(p);
+    //console.log(p);
 
     document.getElementById("SongSearch-ListDisplay").appendChild(DivSimpleSongInfo);
 }
 
+var idValue;
 
-function test() {
+document.getElementById("PageNumber-Input").addEventListener("input", (event)=> {NoLettersHere("PageNumber-Input", "Number"); });
+document.getElementById("Key-Search-Input").addEventListener("input", (event)=> {NoLettersHere("Key-Search-Input", "Hex"); });
+
+function NoLettersHere(id, setting) {
+    if (setting === "Number"){
+        var numCheck = /[0-9]+$/;
+    }
+    if (setting === "Hex"){
+        var numCheck = /[0-9,a-f, A-F]+$/;
+    }
+
+    if (document.getElementById(id).value.match(numCheck)) {
+        if (setting === 1){
+        }
+    }
+    else{
+        var t = document.getElementById(id).value;
+        document.getElementById(id).value = t.substring(0, t.length - 1);
+    }
+}
+
+function SearchPage() {
     event.preventDefault();
+    console.log("hello");
+}
+
+function SearchInput() {
+    event.preventDefault();
+    console.log("yo");
+}
+
+function SearchKey() {
+    event.preventDefault();
+    console.log("hey");
+}
+
+function NextPage() {
+
+    var s = history.state;
+
+    RefreshScreen();
+    document.getElementById(s.DisplayType).setAttribute("style", "display: '' ");
+
+    console.log(s);
+    var n = Number(s.CurPageNum) + 1;
+
+    if (s.TotalPageNumber = null) {
+        n = 0;
+    }
+
+    GetData(s.SearchType, n);
+
+    document.getElementById("PageNumber-Input").value = n + 1;
+    let StateObj = {SearchType: s.SearchType, CurPageNum: n, DisplayType: s.DisplayType};
+    window.history.replaceState(StateObj, "", "");
+    window.scrollTo(0,0);
+}
+
+function PreviousPage() {
+
+    var s = history.state;
+
+    RefreshScreen();
+    document.getElementById(s.DisplayType).setAttribute("style", "display: '' ");
+
+    //console.log(s);
+    var n = Number(s.CurPageNum) - 1;
+
+    if (n <= -1){
+        n = s.TotalPageNumber;
+    }
+
+    GetData(s.SearchType, n);
+
+    document.getElementById("PageNumber-Input").value = n + 1;
+    let StateObj = {SearchType: s.SearchType, CurPageNum: n, DisplayType: s.DisplayType};
+    window.history.replaceState(StateObj, "", "");
+    window.scrollTo(0,0);
+}
+
+
+function Hot() {
+    let StateObj = {SearchType: "hot", CurPageNum: "0", DisplayType: "SongSearch-ListDisplay"}
+    window.history.pushState(StateObj, "", "");
+    console.log(history.state);
+
+    RefreshScreen();
+    document.getElementById("SongSearch-ListDisplay").setAttribute("style", "display: '' ");
+    document.getElementById("PageNumber-Input").value = "1";
+    GetData("hot", 0);
+    window.scrollTo(0,0);
+}
+
+function Latest() {
+    let StateObj = {SearchType: "latest", page: "0", DisplayType: "SongSearch-ListDisplay"}
+    window.history.pushState(StateObj, "", "");
+    console.log(history.state);
+
+    RefreshScreen();
+    document.getElementById("SongSearch-ListDisplay").setAttribute("style", "display: '' ");
+    document.getElementById("PageNumber-Input").value = "1";
+    GetData("latest", 0);
+    window.scrollTo(0,0);
+}
+
+function RefreshScreen() {
+    document.getElementById("SongSearch-ListDisplay").remove();
+    document.getElementById("SingleSong-Info").remove();
+    var SongSearchListDisplay = document.createElement("div");
+    SongSearchListDisplay.setAttribute("id", "SongSearch-ListDisplay");
+    SongSearchListDisplay.setAttribute("class", "SongSearch-ListDisplay");
+    SongSearchListDisplay.setAttribute("style", "display: none");
+    document.getElementById("DisplayArea").appendChild(SongSearchListDisplay);
+    var SingleSongInfo = document.createElement("div");
+    SingleSongInfo.setAttribute("id", "SingleSong-Info");
+    SingleSongInfo.setAttribute("class", "SingleSong-Info");
+    SingleSongInfo.setAttribute("style", "display: none");
+    document.getElementById("DisplayArea").appendChild(SingleSongInfo);
 }

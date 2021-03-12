@@ -41,11 +41,11 @@
                 </a>
             </div>
             <form class="NavBar-Form">
-                <input type="search" placeholder="Map key" size="5" maxlength="5">
+                <input id="Key-Search-Input" type="search" placeholder="Map key" size="5" maxlength="5">
                 <div class="NavBar-Form-Button">
-                    <a href="javascript:void(0)" onclick="SearchKey()">
+                    <button onclick="SearchKey()">
                         Go
-                    </a>
+                    </button>
                 </div>
             </form>
         </div>
@@ -57,16 +57,16 @@
                 <a href="javascript:void(0)" onclick="Latest()">Latest</a>
             </div>
             <form class="SearchBar-Form">
-                <input type="search" placeholder="Search songs/artists/users">
+                <input id="Search-Bar-Input" type="search" placeholder="Search songs/artists/users">
                 <div class="SearchBar-Form-Button">
-                    <a href="javascript:void(0)" onclick="SearchInput()">
+                    <button onclick="SearchInput()">
                         Search
-                    </a>
+                    </button>
                 </div>
             </form>
         </div>
     </div>
-    <div class="DisplayArea">
+    <div id="DisplayArea" class="DisplayArea">
 
         <div id="SongSearch-ListDisplay" class="SongSearch-ListDisplay">
             <div class="Simple-Song-Info" hidden>
@@ -147,7 +147,7 @@
             </div>
         </div>
 
-        <div class="SingleSong-Info" hidden>
+        <div id="SingleSong-Info" class="SingleSong-Info" hidden>
             <div>image</div>
             <div>song name </div>
 
@@ -157,16 +157,16 @@
     </div>
     <footer>
         <div class="Footer-Nav">
-            <a href="">Previous Page</a>
+            <a href="javascript:void(0)" onclick="PreviousPage()">Previous Page</a>
             <form>
                 <div class="Footer-Page">
                     <div>Page</div> 
-                    <input id="PageNumber" size="4"> 
+                    <input id="PageNumber-Input" type="search" size="4" autocomplete="off"> 
                     <div id="NumberOfPages">of 20345</div>
-                    <button href="javascript:void(0)" onclick="test()">go</button>
+                    <button onclick="SearchPage()">go</button>
                 </div>
             </form>
-            <a href="">Next Page</a>
+            <a href="javascript:void(0)" onclick="NextPage()">Next Page</a>
         </div>
         <div class="Site-Info">
             <div> made by Vaser888</div>
