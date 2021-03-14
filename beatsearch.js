@@ -266,9 +266,29 @@ function NoLettersHere(id, setting) {
     }
 }
 
+function GetNumberofPages(PageNumbers) {
+    PageNumbers = document.getElementById("NumberOfPages").innerHTML;
+    PageNumbers = Number(PageNumbers.substring(3))-1;
+    return PageNumbers;
+}
+
 function SearchPage() {
     event.preventDefault();
-    console.log("hello");
+
+    var HistoryState = history.state;
+
+    RefreshScreen();
+    document.getElementById(HistoryState.DisplayType).setAttribute("style", "display: '' ");
+
+
+    var PageInputValue = document.getElementById("PageNumber-Input").value;
+    PageInputValue = Number(PageInputValue)-1;
+    var NumberOfPages = GetNumberofPages();
+    if (PageInputValue === NaN || PageInputValue >= NumberOfPages || PageInputValue <= 0) {
+        PageInputValue = 0;
+        document.getElementById("PageNumber-Input").value = 1;
+    }
+    GetData(HistoryState.SearchType, PageInputValue);
 }
 
 function SearchInput() {
@@ -283,44 +303,46 @@ function SearchKey() {
 
 function NextPage() {
 
-    var s = history.state;
+    var HistoryState = history.state;
+
+    var NumberOfPages = GetNumberofPages();
 
     RefreshScreen();
-    document.getElementById(s.DisplayType).setAttribute("style", "display: '' ");
+    document.getElementById(HistoryState.DisplayType).setAttribute("style", "display: '' ");
 
-    console.log(s);
-    var n = Number(s.CurPageNum) + 1;
-
-    if (s.TotalPageNumber = null) {
+    console.log(HistoryState);
+    var n = Number(HistoryState.CurPageNum) + 1;
+    console.log(NumberOfPages, HistoryState.CurPageNum)
+    if (NumberOfPages = null || NumberOfPages <= HistoryState.CurPageNum) {
         n = 0;
     }
 
-    GetData(s.SearchType, n);
+    GetData(HistoryState.SearchType, n);
 
     document.getElementById("PageNumber-Input").value = n + 1;
-    let StateObj = {SearchType: s.SearchType, CurPageNum: n, DisplayType: s.DisplayType};
+    let StateObj = {SearchType: HistoryState.SearchType, CurPageNum: n, DisplayType: HistoryState.DisplayType};
     window.history.replaceState(StateObj, "", "");
     window.scrollTo(0,0);
 }
 
 function PreviousPage() {
 
-    var s = history.state;
+    var HistoryState = history.state;
 
     RefreshScreen();
-    document.getElementById(s.DisplayType).setAttribute("style", "display: '' ");
+    document.getElementById(HistoryState.DisplayType).setAttribute("style", "display: '' ");
 
     //console.log(s);
-    var n = Number(s.CurPageNum) - 1;
+    var n = Number(HistoryState.CurPageNum) - 1;
 
     if (n <= -1){
-        n = s.TotalPageNumber;
+        n = HistoryState.TotalPageNumber;
     }
 
-    GetData(s.SearchType, n);
+    GetData(HistoryState.SearchType, n);
 
     document.getElementById("PageNumber-Input").value = n + 1;
-    let StateObj = {SearchType: s.SearchType, CurPageNum: n, DisplayType: s.DisplayType};
+    let StateObj = {SearchType: HistoryState.SearchType, CurPageNum: n, DisplayType: HistoryState.DisplayType};
     window.history.replaceState(StateObj, "", "");
     window.scrollTo(0,0);
 }
