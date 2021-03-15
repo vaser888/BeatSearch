@@ -4,13 +4,34 @@ window.onload = function(){
     if (history.state === null){
         console.log("lol");
     }
+    console.log(history.state, "onload");
 }
+
+window.addEventListener('popstate', function (event) {
+    console.log(history.state, "popstate");
+    if (history.state != null){
+        RefreshScreen();
+        GetData(history.state.Type ,history.state.SearchType, history.state.UserId, history.state.CurPageNum, history.state.SearchData);
+        document.getElementById(history.state.DisplayType).setAttribute("style", "display: '' ");
+        document.getElementById("PageNumber-Input").value = history.state.CurPageNum + 1;    
+    }
+});
 
 var JsonData;
 var t;
 
-function GetData(Type, Page) {
-    fetch("https://beatsaver.com/api/maps/" + Type + "/" + Page + "?automapper=1").then(function (r) { return r.json() }).then(function (JsonData0) {
+function GetData(MapsOrSearch, Type, User_Id, Page, SearchParameters) {
+
+    if (User_Id != ""){
+        User_Id = User_Id + "/";
+    }
+    if (SearchParameters != "") {
+        SearchParameters = "?" + SearchParameters;
+        if (SearchParameters === "?undefined"){
+            SearchParameters = "";
+        }
+    }
+    fetch("https://beatsaver.com/api/" + MapsOrSearch +"/" + Type +"/" + User_Id + Page + SearchParameters +"?automapper=1").then(function (r) { return r.json() }).then(function (JsonData0) {
         //console.log(JsonData0);
         var t;  
         var TotalMaps = JsonData0.totalDocs;
@@ -48,34 +69,19 @@ function GetData(Type, Page) {
             }
         }
         document.getElementById("NumberOfPages").innerHTML = "of " + (JsonData0.lastPage + 1);
-        var p = window.history.state;
-        let StateObj = {SearchType: Type, CurPageNum: Page, DisplayType: p.DisplayType ,TotalPageNumber: JsonData0.lastPage};
-        window.history.replaceState(StateObj, "", "");
+        User_Id = User_Id.substring(0, User_Id.length - 1);
+
+        ReplaceHistoryState(MapsOrSearch, Type, User_Id, Page,  window.history.state.DisplayType, JsonData0.lastPage, );
         console.log(window.history.state);
     }).catch(function(){
 
     });
 }
 
-
-function GrabSimpleData() {
-    var i = GetData("hot", 0);
-    var t = i.docs[0].metadata;
-    var h = t.difficulties.easy;
-    console.log(i,h);
-}
-
-function GetHotData(PageNumber) {
-    var z = GetData("hot", PageNumber);
-    var y = z.docs[0].metadata;
-    var a = y.characteristics[0].difficulties;
-    console.log(a);
-}
-
 function CreateSimpleSongInfo(Data0) {
     var DivSimpleSongInfo = document.createElement("div");
     DivSimpleSongInfo.setAttribute("class", "Simple-Song-Info");
-
+    // header Info
     var DivHeader = document.createElement("div");
     DivHeader.setAttribute("class", "Header-Info");
     var DivMapper = document.createElement("div");
@@ -85,21 +91,22 @@ function CreateSimpleSongInfo(Data0) {
     DivHeader.appendChild(DivMapper);
     DivHeader.appendChild(DivKey);
     DivSimpleSongInfo.appendChild(DivHeader);
-
+    //Date Uploaded
     var DivDateUp = document.createElement("div");
     var d = Data0[2];
     var LocalDate = new Date (d);
     DivDateUp.innerHTML = LocalDate.toLocaleString("en-GB", {hour12:true, year:"numeric", month:"numeric", day:"numeric", hour:"numeric", minute:"numeric"});
     DivDateUp.setAttribute("class", "Date-Uploaded");
     DivSimpleSongInfo.appendChild(DivDateUp);
-
+    //Cover Image
     var DivImage = document.createElement("div");
     DivImage.setAttribute("class", "Cover-Image");
     var Img0 = document.createElement("img");
+    Img0.setAttribute("loading", "lazy");
     Img0.src = "https://beatsaver.com" + Data0[3];
     DivImage.appendChild(Img0);
     DivSimpleSongInfo.appendChild(DivImage);
-
+    //Song and user
     var DivSongAndUser = document.createElement("div");
     DivSongAndUser.setAttribute("class", "SongAndUser-Info");
     var A0 = document.createElement("a");
@@ -111,11 +118,13 @@ function CreateSimpleSongInfo(Data0) {
     Div0.innerHTML = "Uploaded by ";
     var A1 = document.createElement("a");
     A1.setAttribute("href", "javascript:void(0)");
+    A1.setAttribute("onclick", "GetUserMaps(this)");
+    A1.setAttribute("Data-User-ID", Data0[5]._id);
     A1.innerHTML = Data0[5].username;
     Div0.appendChild(A1);
     DivSongAndUser.appendChild(Div0);
     DivSimpleSongInfo.appendChild(DivSongAndUser);
-
+    //Map stats
     var DivMapStats = document.createElement("div");
     DivMapStats.setAttribute("class", "MapStats");
     var Div1 = document.createElement("div");
@@ -128,9 +137,9 @@ function CreateSimpleSongInfo(Data0) {
     var sec = time % 60;
     sec = sec < 10 ? "0" + sec : sec;
     Div1.innerHTML = min + ":" + sec + " 🕔";
-    Div2.innerHTML = Data0[7].upVotes + " 👍";
-    Div3.innerHTML = Data0[7].downVotes + " 👎";
-    Div4.innerHTML = Data0[7].downloads + " 💾";
+    Div2.innerHTML = Intl.NumberFormat('en-US', {style: 'decimal'}).format(Data0[7].upVotes) + " 👍";
+    Div3.innerHTML = Intl.NumberFormat('en-US', {style: 'decimal'}).format(Data0[7].downVotes) + " 👎";
+    Div4.innerHTML = Intl.NumberFormat('en-US', {style: 'decimal'}).format(Data0[7].downloads) + " 💾";
     var Rating = Data0[7].rating;
     Rating = Math.round(Rating * 10000)/100;
     Div5.innerHTML = Rating + "% 💯";
@@ -140,7 +149,7 @@ function CreateSimpleSongInfo(Data0) {
     DivMapStats.appendChild(Div4);
     DivMapStats.appendChild(Div5);
     DivSimpleSongInfo.appendChild(DivMapStats);
-
+    //Modes
     var p = Data0[8].length;
     for (i=0; i<=p-1; i++){
         var DivModes = document.createElement("div");
@@ -223,7 +232,7 @@ function CreateSimpleSongInfo(Data0) {
         DivModes.appendChild(DivStandard);
         DivSimpleSongInfo.appendChild(DivModes);
     }
-    
+    //Download stuff
     var DivDownloadStuff = document.createElement("div");
     DivDownloadStuff.setAttribute("class", "Download-Stuff");
     var A2 = document.createElement("a");
@@ -288,7 +297,8 @@ function SearchPage() {
         PageInputValue = 0;
         document.getElementById("PageNumber-Input").value = 1;
     }
-    GetData(HistoryState.SearchType, PageInputValue);
+
+    GetData(HistoryState.Type ,HistoryState.SearchType, "" , PageInputValue, "");
 }
 
 function SearchInput() {
@@ -302,7 +312,6 @@ function SearchKey() {
 }
 
 function NextPage() {
-
     var HistoryState = history.state;
 
     var NumberOfPages = GetNumberofPages();
@@ -310,23 +319,21 @@ function NextPage() {
     RefreshScreen();
     document.getElementById(HistoryState.DisplayType).setAttribute("style", "display: '' ");
 
-    console.log(HistoryState);
+    //console.log(HistoryState);
     var n = Number(HistoryState.CurPageNum) + 1;
-    console.log(NumberOfPages, HistoryState.CurPageNum)
+    console.log(NumberOfPages, HistoryState.CurPageNum);
     if (NumberOfPages = null || NumberOfPages <= HistoryState.CurPageNum) {
         n = 0;
     }
 
-    GetData(HistoryState.SearchType, n);
+    GetData(HistoryState.Type ,HistoryState.SearchType, HistoryState.UserId, n, "", HistoryState.SearchData);
 
     document.getElementById("PageNumber-Input").value = n + 1;
-    let StateObj = {SearchType: HistoryState.SearchType, CurPageNum: n, DisplayType: HistoryState.DisplayType};
-    window.history.replaceState(StateObj, "", "");
+    ReplaceHistoryState(HistoryState.Type, HistoryState.SearchType, HistoryState.UserId, n, HistoryState.DisplayType, "", HistoryState.SearchData);
     window.scrollTo(0,0);
 }
 
 function PreviousPage() {
-
     var HistoryState = history.state;
 
     RefreshScreen();
@@ -339,36 +346,34 @@ function PreviousPage() {
         n = HistoryState.TotalPageNumber;
     }
 
-    GetData(HistoryState.SearchType, n);
+    GetData(HistoryState.Type ,HistoryState.SearchType, HistoryState.UserId, n, "", HistoryState.SearchData);
 
     document.getElementById("PageNumber-Input").value = n + 1;
-    let StateObj = {SearchType: HistoryState.SearchType, CurPageNum: n, DisplayType: HistoryState.DisplayType};
-    window.history.replaceState(StateObj, "", "");
+    ReplaceHistoryState(HistoryState.Type, HistoryState.SearchType, HistoryState.UserId, n, HistoryState.DisplayType, "", HistoryState.SearchData);
     window.scrollTo(0,0);
 }
 
 
 function Hot() {
-    let StateObj = {SearchType: "hot", CurPageNum: "0", DisplayType: "SongSearch-ListDisplay"}
-    window.history.pushState(StateObj, "", "");
+    PushHistoryState("maps", "hot", "", "0", "SongSearch-ListDisplay", "", "");
+
     console.log(history.state);
 
     RefreshScreen();
     document.getElementById("SongSearch-ListDisplay").setAttribute("style", "display: '' ");
     document.getElementById("PageNumber-Input").value = "1";
-    GetData("hot", 0);
+    GetData("maps","hot", "", 0, "");
     window.scrollTo(0,0);
 }
 
 function Latest() {
-    let StateObj = {SearchType: "latest", page: "0", DisplayType: "SongSearch-ListDisplay"}
-    window.history.pushState(StateObj, "", "");
+    PushHistoryState("maps", "latest", "", "0", "SongSearch-ListDisplay", "", "");
     console.log(history.state);
 
     RefreshScreen();
     document.getElementById("SongSearch-ListDisplay").setAttribute("style", "display: '' ");
     document.getElementById("PageNumber-Input").value = "1";
-    GetData("latest", 0);
+    GetData("maps","latest", "", 0, "");
     window.scrollTo(0,0);
 }
 
@@ -385,4 +390,22 @@ function RefreshScreen() {
     SingleSongInfo.setAttribute("class", "SingleSong-Info");
     SingleSongInfo.setAttribute("style", "display: none");
     document.getElementById("DisplayArea").appendChild(SingleSongInfo);
+}
+
+function GetUserMaps(UserId) {
+    event.preventDefault();
+    var User_id = UserId.getAttribute("data-user-id");
+    RefreshScreen();
+    document.getElementById("SongSearch-ListDisplay").setAttribute("style", "display: '' ");
+    GetData("maps", "uploader", User_id , 0, "");
+}
+
+function ReplaceHistoryState(HistoryType,HistorySearchType, HistoryUserId, HistoryCurrentPageNumber, HistoryDisplayType, HistoryTotalPageNumber, HistorySearchData) {
+    let StateObj = {Type: HistoryType, SearchType: HistorySearchType, UserId: HistoryUserId, CurPageNum: HistoryCurrentPageNumber, DisplayType: HistoryDisplayType ,TotalPageNumber: HistoryTotalPageNumber, SearchData: HistorySearchData};
+    window.history.replaceState(StateObj, "", "");
+}
+
+function PushHistoryState(HistoryType,HistorySearchType, HistoryUserId, HistoryCurrentPageNumber, HistoryDisplayType, HistoryTotalPageNumber, HistorySearchData) {
+    let StateObj = {Type: HistoryType, SearchType: HistorySearchType, UserId: HistoryUserId, CurPageNum: HistoryCurrentPageNumber, DisplayType: HistoryDisplayType ,TotalPageNumber: HistoryTotalPageNumber, SearchData: HistorySearchData};
+    window.history.pushState(StateObj, "", "");
 }
