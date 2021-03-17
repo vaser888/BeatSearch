@@ -25,13 +25,10 @@ function GetData(MapsOrSearch, Type, User_Id, Page, SearchParameters) {
     if (User_Id != ""){
         User_Id = User_Id + "/";
     }
-    if (SearchParameters != "") {
-        SearchParameters = "?" + SearchParameters;
-        if (SearchParameters === "?undefined"){
-            SearchParameters = "";
-        }
+    if (SearchParameters === "?q=") {
+        alert("type something to search");
     }
-    fetch("https://beatsaver.com/api/" + MapsOrSearch +"/" + Type +"/" + User_Id + Page + SearchParameters +"?automapper=1").then(function (r) { return r.json() }).then(function (JsonData0) {
+    fetch("https://beatsaver.com/api/" + MapsOrSearch +"/" + Type +"/" + User_Id + Page + SearchParameters).then(function (r) { return r.json() }).then(function (JsonData0) {
         //console.log(JsonData0);
         var t;  
         var TotalMaps = JsonData0.totalDocs;
@@ -71,10 +68,10 @@ function GetData(MapsOrSearch, Type, User_Id, Page, SearchParameters) {
         document.getElementById("NumberOfPages").innerHTML = "of " + (JsonData0.lastPage + 1);
         User_Id = User_Id.substring(0, User_Id.length - 1);
 
-        ReplaceHistoryState(MapsOrSearch, Type, User_Id, Page,  window.history.state.DisplayType, JsonData0.lastPage, );
+        ReplaceHistoryState(MapsOrSearch, Type, User_Id, Page,  window.history.state.DisplayType, JsonData0.lastPage,  SearchParameters);
         console.log(window.history.state);
     }).catch(function(){
-
+        console.log("no load for you")
     });
 }
 
@@ -289,7 +286,6 @@ function SearchPage() {
     RefreshScreen();
     document.getElementById(HistoryState.DisplayType).setAttribute("style", "display: '' ");
 
-
     var PageInputValue = document.getElementById("PageNumber-Input").value;
     PageInputValue = Number(PageInputValue)-1;
     var NumberOfPages = GetNumberofPages();
@@ -298,12 +294,22 @@ function SearchPage() {
         document.getElementById("PageNumber-Input").value = 1;
     }
 
-    GetData(HistoryState.Type ,HistoryState.SearchType, "" , PageInputValue, "");
+    GetData(HistoryState.Type ,HistoryState.SearchType, HistoryState.UserId , PageInputValue, "?automapper=1");
 }
 
 function SearchInput() {
     event.preventDefault();
-    console.log("yo");
+   
+    var SearchBarInputValue = document.getElementById("Search-Bar-Input").value;
+    SearchBarInputValue = "?q=" + SearchBarInputValue;
+    PushHistoryState("search", "text", "", "0", "SongSearch-ListDisplay", "", SearchBarInputValue);
+    RefreshScreen();
+    document.getElementById(history.state.DisplayType).setAttribute("style", "display: '' ");
+    GetData("search","text", "", 0, SearchBarInputValue);
+    document.getElementById("PageNumber-Input").value = "1";
+    window.scrollTo(0,0);
+    
+    console.log(SearchBarInputValue);
 }
 
 function SearchKey() {
@@ -326,7 +332,7 @@ function NextPage() {
         n = 0;
     }
 
-    GetData(HistoryState.Type ,HistoryState.SearchType, HistoryState.UserId, n, "", HistoryState.SearchData);
+    GetData(HistoryState.Type ,HistoryState.SearchType, HistoryState.UserId, n, HistoryState.SearchData);
 
     document.getElementById("PageNumber-Input").value = n + 1;
     ReplaceHistoryState(HistoryState.Type, HistoryState.SearchType, HistoryState.UserId, n, HistoryState.DisplayType, "", HistoryState.SearchData);
@@ -346,7 +352,7 @@ function PreviousPage() {
         n = HistoryState.TotalPageNumber;
     }
 
-    GetData(HistoryState.Type ,HistoryState.SearchType, HistoryState.UserId, n, "", HistoryState.SearchData);
+    GetData(HistoryState.Type ,HistoryState.SearchType, HistoryState.UserId, n, HistoryState.SearchData);
 
     document.getElementById("PageNumber-Input").value = n + 1;
     ReplaceHistoryState(HistoryState.Type, HistoryState.SearchType, HistoryState.UserId, n, HistoryState.DisplayType, "", HistoryState.SearchData);
@@ -362,7 +368,7 @@ function Hot() {
     RefreshScreen();
     document.getElementById("SongSearch-ListDisplay").setAttribute("style", "display: '' ");
     document.getElementById("PageNumber-Input").value = "1";
-    GetData("maps","hot", "", 0, "");
+    GetData("maps","hot", "", 0, "?automapper=1");
     window.scrollTo(0,0);
 }
 
@@ -373,7 +379,7 @@ function Latest() {
     RefreshScreen();
     document.getElementById("SongSearch-ListDisplay").setAttribute("style", "display: '' ");
     document.getElementById("PageNumber-Input").value = "1";
-    GetData("maps","latest", "", 0, "");
+    GetData("maps","latest", "", 0, "?automapper=1");
     window.scrollTo(0,0);
 }
 
@@ -398,6 +404,9 @@ function GetUserMaps(UserId) {
     RefreshScreen();
     document.getElementById("SongSearch-ListDisplay").setAttribute("style", "display: '' ");
     GetData("maps", "uploader", User_id , 0, "");
+    document.getElementById("PageNumber-Input").value = "1";
+    window.scrollTo(0,0);
+    
 }
 
 function ReplaceHistoryState(HistoryType,HistorySearchType, HistoryUserId, HistoryCurrentPageNumber, HistoryDisplayType, HistoryTotalPageNumber, HistorySearchData) {

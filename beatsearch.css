@@ -346,3 +346,10 @@ footer {
     position: absolute;
     bottom: 0;
 }
+
+
+@media screen and (max-width: 450px) {
+    .DisplayArea .SongSearch-ListDisplay .Simple-Song-Info {
+        width: 340px;
+    }
+}
