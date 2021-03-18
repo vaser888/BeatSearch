@@ -31,39 +31,44 @@ function GetData(MapsOrSearch, Type, User_Id, Page, SearchParameters) {
     fetch("https://beatsaver.com/api/" + MapsOrSearch +"/" + Type +"/" + User_Id + Page + SearchParameters).then(function (r) { return r.json() }).then(function (JsonData0) {
         //console.log(JsonData0);
         var t;  
+
         var TotalMaps = JsonData0.totalDocs;
-        /*if(Type ==="detail") {
-            t = JsonData0;
-            //console.log("detail");
+        
+        if (Type == "uploader"){
+            var u = JsonData0.docs[0].uploader.username;
+            CreateUploaderHeader(u, TotalMaps);
         }
-        */
-            //console.log("hey");
+
         if (TotalMaps>=25) {
             TotalMaps = 25;
         }
-        for (x=0; x<=TotalMaps-1; x++){
-                t = JsonData0.docs[x];
+        if (Type != "detail"){
+            for (x=0; x<=TotalMaps-1; x++){
+                    t = JsonData0.docs[x];
 
+                var i = [
+                    t.metadata.levelAuthorName,
+                    t.key,
+                    t.uploaded,
+                    t.coverURL,
+                    t.name,
+                    t.uploader,
+                    t.metadata.duration,
+                    t.stats,
+                    t.metadata.characteristics,
+                    t.downloadURL
+                ];
+                var BotTest = i[0];
+                if (BotTest === "Beat Sage") {
+                }
+                else {
+                    //console.log(i, BotTest);
+                    CreateSimpleSongInfo(i);
+                }
+            }
+        }
+        else {
 
-            var i = [
-                t.metadata.levelAuthorName,
-                t.key,
-                t.uploaded,
-                t.coverURL,
-                t.name,
-                t.uploader,
-                t.metadata.duration,
-                t.stats,
-                t.metadata.characteristics,
-                t.downloadURL
-            ];
-            var BotTest = i[0];
-            if (BotTest === "Beat Sage") {
-            }
-            else {
-                //console.log(i, BotTest);
-                CreateSimpleSongInfo(i);
-            }
         }
         document.getElementById("NumberOfPages").innerHTML = "of " + (JsonData0.lastPage + 1);
         User_Id = User_Id.substring(0, User_Id.length - 1);
@@ -71,8 +76,20 @@ function GetData(MapsOrSearch, Type, User_Id, Page, SearchParameters) {
         ReplaceHistoryState(MapsOrSearch, Type, User_Id, Page,  window.history.state.DisplayType, JsonData0.lastPage,  SearchParameters);
         console.log(window.history.state);
     }).catch(function(){
-        console.log("no load for you")
+        console.log("Error: did not load for you");
     });
+}
+
+function CreateUploaderHeader(UserName, TotalMapNumber) {
+    var MapOrMaps;
+    if (TotalMapNumber != 1) {
+        MapOrMaps = " maps";
+    }
+    else {
+        MapsOrMaps = " map";
+    }
+    document.getElementById("MapperHeader").innerHTML = UserName + " has created " + TotalMapNumber + MapOrMaps;
+    document.getElementById("MapperHeader").setAttribute("class", "MapperHeader");
 }
 
 function CreateSimpleSongInfo(Data0) {
@@ -130,16 +147,26 @@ function CreateSimpleSongInfo(Data0) {
     var Div4 = document.createElement("div");
     var Div5 = document.createElement("div");
     var time = Data0[6];
+    if (time === 0) {
+        time = FindMapDuration(Data0);
+    }
     var min = Math.floor(time/60);
     var sec = time % 60;
     sec = sec < 10 ? "0" + sec : sec;
     Div1.innerHTML = min + ":" + sec + " 🕔";
+
     Div2.innerHTML = Intl.NumberFormat('en-US', {style: 'decimal'}).format(Data0[7].upVotes) + " 👍";
     Div3.innerHTML = Intl.NumberFormat('en-US', {style: 'decimal'}).format(Data0[7].downVotes) + " 👎";
     Div4.innerHTML = Intl.NumberFormat('en-US', {style: 'decimal'}).format(Data0[7].downloads) + " 💾";
     var Rating = Data0[7].rating;
     Rating = Math.round(Rating * 10000)/100;
     Div5.innerHTML = Rating + "% 💯";
+    Div1.setAttribute("title", "Beatmap Duration");
+    Div2.setAttribute("title", "Upvotes");
+    Div3.setAttribute("title", "Downvotes");
+    Div4.setAttribute("title", "Downloads");
+    Div5.setAttribute("title", "Beatmap Rating");
+
     DivMapStats.appendChild(Div1);
     DivMapStats.appendChild(Div2);
     DivMapStats.appendChild(Div3);
@@ -294,7 +321,7 @@ function SearchPage() {
         document.getElementById("PageNumber-Input").value = 1;
     }
 
-    GetData(HistoryState.Type ,HistoryState.SearchType, HistoryState.UserId , PageInputValue, "?automapper=1");
+    GetData(HistoryState.Type ,HistoryState.SearchType, HistoryState.UserId , PageInputValue, HistoryState.SearchData);
 }
 
 function SearchInput() {
@@ -385,7 +412,9 @@ function Latest() {
 
 function RefreshScreen() {
     document.getElementById("SongSearch-ListDisplay").remove();
-    document.getElementById("SingleSong-Info").remove();
+    document.getElementById("SingleSong-Info").remove(); 
+    document.getElementById("MapperHeader").innerHTML = "";
+    document.getElementById("MapperHeader").setAttribute("class", "");
     var SongSearchListDisplay = document.createElement("div");
     SongSearchListDisplay.setAttribute("id", "SongSearch-ListDisplay");
     SongSearchListDisplay.setAttribute("class", "SongSearch-ListDisplay");
@@ -417,4 +446,16 @@ function ReplaceHistoryState(HistoryType,HistorySearchType, HistoryUserId, Histo
 function PushHistoryState(HistoryType,HistorySearchType, HistoryUserId, HistoryCurrentPageNumber, HistoryDisplayType, HistoryTotalPageNumber, HistorySearchData) {
     let StateObj = {Type: HistoryType, SearchType: HistorySearchType, UserId: HistoryUserId, CurPageNum: HistoryCurrentPageNumber, DisplayType: HistoryDisplayType ,TotalPageNumber: HistoryTotalPageNumber, SearchData: HistorySearchData};
     window.history.pushState(StateObj, "", "");
+}
+
+function FindMapDuration(Data1) {
+    var x = Data1[8][0].difficulties;
+    var arr = [x.easy, x.normal, x.hard, x.expert, x.expertPlus];
+    for (j=0 ; j<=5; j++) {
+        if (arr[j] != null ) {
+            var x = parseInt(arr[j].duration);
+            Math.floor(x);
+            return x;
+        } 
+    }
 }

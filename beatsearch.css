@@ -148,6 +148,17 @@ input {
     margin: 0 auto;
     display: flex;
     min-height: 1000px;
+    flex-direction: column;
+}
+
+.DisplayArea .MapperHeader {
+    color: white;
+    display: flex;
+    justify-content: center;
+    background-color: #222;
+    padding: 8px;
+    margin: 6px auto 0px auto;
+    overflow-wrap: break-word;
 }
 
 .DisplayArea .SingleSong-Info {
@@ -284,7 +295,6 @@ input {
     padding-top: 4px;
 }
 
-
 .DisplayArea .SongSearch-ListDisplay .Simple-Song-Info .Download-Stuff {
     display: flex;
     justify-content: space-evenly;
@@ -299,7 +309,6 @@ input {
 background-color: #f2f2f2;
 border-radius: 6px;
 }
-
 
 .Footer-Nav {
     display: flex;
