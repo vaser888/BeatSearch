@@ -361,4 +361,7 @@ footer {
     .DisplayArea .SongSearch-ListDisplay .Simple-Song-Info {
         width: 340px;
     }
+    .NavBar-Container .NavBar {
+        display: none;
+    }
 }

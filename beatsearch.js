@@ -68,13 +68,32 @@ function GetData(MapsOrSearch, Type, User_Id, Page, SearchParameters) {
             }
         }
         else {
-
+            console.log("you got this!");
+            var i = [
+                JsonData0.metadata.levelAuthorName,
+                JsonData0.key,
+                JsonData0.uploaded,
+                JsonData0.coverURL,
+                JsonData0.name,
+                JsonData0.uploader,
+                JsonData0.metadata.duration,
+                JsonData0.stats,
+                JsonData0.metadata.characteristics,
+                JsonData0.description,
+                JsonData0.metadata.songName,
+                JsonData0.metadata.songSubName,
+                JsonData0.metadata.songAuthorName,
+                JsonData0.metadata.levelAuthorName
+            ];
+            console.log(i);
+            CreateSimpleSongInfo(i);
         }
         document.getElementById("NumberOfPages").innerHTML = "of " + (JsonData0.lastPage + 1);
         User_Id = User_Id.substring(0, User_Id.length - 1);
 
         ReplaceHistoryState(MapsOrSearch, Type, User_Id, Page,  window.history.state.DisplayType, JsonData0.lastPage,  SearchParameters);
         console.log(window.history.state);
+        
     }).catch(function(){
         console.log("Error: did not load for you");
     });
@@ -342,6 +361,9 @@ function SearchInput() {
 function SearchKey() {
     event.preventDefault();
     console.log("hey");
+    var KeyInput = document.getElementById("Key-Search-Input").value;
+    GetData("maps","detail","","",KeyInput);
+    //"2365"
 }
 
 function NextPage() {
