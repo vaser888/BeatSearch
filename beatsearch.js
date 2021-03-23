@@ -1,6 +1,8 @@
 
 window.onload = function(){
     
+    document.getElementById("Description").innerText = "ST-Style by Dubmood feat. Zabutom \r\n\r\nExpert+ : 4.61 NPS\r\nExpert   : 3.44 NPS\r\n\r\nIf you want to contact me then you can find me on the BSMG Discord server under the username vaser888\r\n\r\nThanks jafdy, 3stans and lapras for the playtests. this is a test for a long word and stuf olokkjhgkgkgkghkgkhgkjhgkjhgkjhgmbvbjhgkgkgkjhgkjhgkgkjgkjhgkjhgkjhgkjhgkjhgkjhgkjhgkjhgkhgkjhgkjhgkjhgkhgkjhgkhjg";
+
     if (history.state === null){
         console.log("lol");
     }
@@ -115,179 +117,29 @@ function CreateSimpleSongInfo(Data0) {
     var DivSimpleSongInfo = document.createElement("div");
     DivSimpleSongInfo.setAttribute("class", "Simple-Song-Info");
     // header Info
-    var DivHeader = document.createElement("div");
-    DivHeader.setAttribute("class", "Header-Info");
-    var DivMapper = document.createElement("div");
-    DivMapper.innerHTML = Data0[0];
-    var DivKey = document.createElement("div");
-    DivKey.innerHTML = Data0[1] + " 🔑";
-    DivHeader.appendChild(DivMapper);
-    DivHeader.appendChild(DivKey);
+    var DivHeader = GenorateHeaderInfo(Data0);
     DivSimpleSongInfo.appendChild(DivHeader);
     //Date Uploaded
-    var DivDateUp = document.createElement("div");
-    var d = Data0[2];
-    var LocalDate = new Date (d);
-    DivDateUp.innerHTML = LocalDate.toLocaleString("en-GB", {hour12:true, year:"numeric", month:"numeric", day:"numeric", hour:"numeric", minute:"numeric"});
-    DivDateUp.setAttribute("class", "Date-Uploaded");
+    var DivDateUp = GenorateDateUploaded(Data0);
     DivSimpleSongInfo.appendChild(DivDateUp);
     //Cover Image
-    var DivImage = document.createElement("div");
-    DivImage.setAttribute("class", "Cover-Image");
-    var Img0 = document.createElement("img");
-    Img0.setAttribute("loading", "lazy");
-    Img0.src = "https://beatsaver.com" + Data0[3];
-    DivImage.appendChild(Img0);
+    var DivImage = GenorateCoverImage(Data0);
     DivSimpleSongInfo.appendChild(DivImage);
     //Song and user
-    var DivSongAndUser = document.createElement("div");
-    DivSongAndUser.setAttribute("class", "SongAndUser-Info");
-    var A0 = document.createElement("a");
-    A0.setAttribute("href", "javascript:void(0)");
-    A0.setAttribute("style","font-size:21px");
-    A0.innerHTML = Data0[4];
-    DivSongAndUser.appendChild(A0);
-    var Div0 = document.createElement("div");
-    Div0.innerHTML = "Uploaded by ";
-    var A1 = document.createElement("a");
-    A1.setAttribute("href", "javascript:void(0)");
-    A1.setAttribute("onclick", "GetUserMaps(this)");
-    A1.setAttribute("Data-User-ID", Data0[5]._id);
-    A1.innerHTML = Data0[5].username;
-    Div0.appendChild(A1);
-    DivSongAndUser.appendChild(Div0);
+    var DivSongAndUser = GenorateSongAndUserInfo(Data0);
     DivSimpleSongInfo.appendChild(DivSongAndUser);
     //Map stats
-    var DivMapStats = document.createElement("div");
-    DivMapStats.setAttribute("class", "MapStats");
-    var Div1 = document.createElement("div");
-    var Div2 = document.createElement("div");
-    var Div3 = document.createElement("div");
-    var Div4 = document.createElement("div");
-    var Div5 = document.createElement("div");
     var time = Data0[6];
     if (time === 0) {
         time = FindMapDuration(Data0);
     }
-    var min = Math.floor(time/60);
-    var sec = time % 60;
-    sec = sec < 10 ? "0" + sec : sec;
-    Div1.innerHTML = min + ":" + sec + " 🕔";
-
-    Div2.innerHTML = Intl.NumberFormat('en-US', {style: 'decimal'}).format(Data0[7].upVotes) + " 👍";
-    Div3.innerHTML = Intl.NumberFormat('en-US', {style: 'decimal'}).format(Data0[7].downVotes) + " 👎";
-    Div4.innerHTML = Intl.NumberFormat('en-US', {style: 'decimal'}).format(Data0[7].downloads) + " 💾";
-    var Rating = Data0[7].rating;
-    Rating = Math.round(Rating * 10000)/100;
-    Div5.innerHTML = Rating + "% 💯";
-    Div1.setAttribute("title", "Beatmap Duration");
-    Div2.setAttribute("title", "Upvotes");
-    Div3.setAttribute("title", "Downvotes");
-    Div4.setAttribute("title", "Downloads");
-    Div5.setAttribute("title", "Beatmap Rating");
-
-    DivMapStats.appendChild(Div1);
-    DivMapStats.appendChild(Div2);
-    DivMapStats.appendChild(Div3);
-    DivMapStats.appendChild(Div4);
-    DivMapStats.appendChild(Div5);
+    var DivMapStats = GenorateMapStats(Data0, time);
     DivSimpleSongInfo.appendChild(DivMapStats);
     //Modes
-    var p = Data0[8].length;
-    for (i=0; i<=p-1; i++){
-        var DivModes = document.createElement("div");
-        DivModes.setAttribute("class", "Modes");
-        var DivStandard = document.createElement("div");
-        DivStandard.setAttribute("class", "Standard");
-        var DivModeTitle = document.createElement("div");
-        DivModeTitle.innerHTML = Data0[8][i].name;
-        DivModeTitle.setAttribute("class", "Mode-Title");
-        var DivDifs = document.createElement("div");
-        DivDifs.setAttribute("class", "Difs");
-
-        if (Data0[8][i].difficulties.easy != null){
-            var DivEasy = document.createElement("div");
-            DivEasy.setAttribute("class", "Easy");
-            var Div6 = document.createElement("div");
-            Div6.innerHTML = "Easy";
-            var Div7 = document.createElement("div");
-            var NotesNumber  = Data0[8][i].difficulties.easy.notes;
-            var Nps = Math.round((NotesNumber/time)*100)/100;
-            Div7.innerHTML = Nps + " NPS";
-            DivEasy.appendChild(Div6);
-            DivEasy.appendChild(Div7);
-            DivDifs.appendChild(DivEasy);
-        }
-        if (Data0[8][i].difficulties.normal != null){
-            var DivEasy = document.createElement("div");
-            DivEasy.setAttribute("class", "Normal");
-            var Div6 = document.createElement("div");
-            Div6.innerHTML = "Normal";
-            var Div7 = document.createElement("div");
-            var NotesNumber  = Data0[8][i].difficulties.normal.notes;
-            var Nps = Math.round((NotesNumber/time)*100)/100;
-            Div7.innerHTML = Nps + " NPS";
-            DivEasy.appendChild(Div6);
-            DivEasy.appendChild(Div7);
-            DivDifs.appendChild(DivEasy);
-        }
-        if (Data0[8][i].difficulties.hard != null){
-            var DivEasy = document.createElement("div");
-            DivEasy.setAttribute("class", "Hard");
-            var Div6 = document.createElement("div");
-            Div6.innerHTML = "Hard";
-            var Div7 = document.createElement("div");
-            var NotesNumber  = Data0[8][i].difficulties.hard.notes;
-            var Nps = Math.round((NotesNumber/time)*100)/100;
-            Div7.innerHTML = Nps + " NPS";
-            DivEasy.appendChild(Div6);
-            DivEasy.appendChild(Div7);
-            DivDifs.appendChild(DivEasy);
-        }
-        if (Data0[8][i].difficulties.expert != null){
-            var DivEasy = document.createElement("div");
-            DivEasy.setAttribute("class", "Expert");
-            var Div6 = document.createElement("div");
-            Div6.innerHTML = "Expert";
-            var Div7 = document.createElement("div");
-            var NotesNumber  = Data0[8][i].difficulties.expert.notes;
-            var Nps = Math.round((NotesNumber/time)*100)/100;
-            Div7.innerHTML = Nps + " NPS";
-            DivEasy.appendChild(Div6);
-            DivEasy.appendChild(Div7);
-            DivDifs.appendChild(DivEasy);
-        }
-        if (Data0[8][i].difficulties.expertPlus != null){
-            var DivEasy = document.createElement("div");
-            DivEasy.setAttribute("class", "ExpertPlus");
-            var Div6 = document.createElement("div");
-            Div6.innerHTML = "expertPlus";
-            var Div7 = document.createElement("div");
-            var NotesNumber  = Data0[8][i].difficulties.expertPlus.notes;
-            var Nps = Math.round((NotesNumber/time)*100)/100;
-            Div7.innerHTML = Nps + " NPS";
-            DivEasy.appendChild(Div6);
-            DivEasy.appendChild(Div7);
-            DivDifs.appendChild(DivEasy);
-        }
-        DivStandard.appendChild(DivModeTitle);
-        DivStandard.appendChild(DivDifs);
-        DivModes.appendChild(DivStandard);
-        DivSimpleSongInfo.appendChild(DivModes);
-    }
+    var DivModes = GenorateModes(Data0, time);
+    DivSimpleSongInfo.appendChild(DivModes);
     //Download stuff
-    var DivDownloadStuff = document.createElement("div");
-    DivDownloadStuff.setAttribute("class", "Download-Stuff");
-    var A2 = document.createElement("a");
-    A2.innerHTML = "Download";
-    var Dl = "https://beatsaver.com" + Data0[9];
-    A2.setAttribute("href", Dl);
-    var A3 = document.createElement("a");
-    A3.innerHTML = "OneClick™";
-    var Oc = "beatsaver://" + Data0[1];
-    A3.setAttribute("href", Oc);
-    DivDownloadStuff.appendChild(A2);
-    DivDownloadStuff.appendChild(A3);
+    var DivDownloadStuff = GenorateDownloadStuff(Data0);
     DivSimpleSongInfo.appendChild(DivDownloadStuff);
 
     //console.log(p);
@@ -480,4 +332,202 @@ function FindMapDuration(Data1) {
             return x;
         } 
     }
+}
+//////
+// create page elements functions
+//////
+function GenorateHeaderInfo(Data1) {
+    var DivHeader = document.createElement("div");
+    DivHeader.setAttribute("class", "Header-Info");
+    var DivMapper = document.createElement("div");
+    DivMapper.innerHTML = Data1[0];
+    var DivKey = document.createElement("div");
+    DivKey.innerHTML = Data1[1] + " 🔑";
+    DivHeader.appendChild(DivMapper);
+    DivHeader.appendChild(DivKey);
+    return DivHeader;
+}
+
+function GenorateDateUploaded(Data1) {
+    var DivDateUp = document.createElement("div");
+    var d = Data1[2];
+    var LocalDate = new Date (d);
+    DivDateUp.innerHTML = LocalDate.toLocaleString("en-GB", {hour12:true, year:"numeric", month:"numeric", day:"numeric", hour:"numeric", minute:"numeric"});
+    DivDateUp.setAttribute("class", "Date-Uploaded");
+    return DivDateUp;
+}
+
+function GenorateCoverImage(Data1) {
+    var DivImage = document.createElement("div");
+    DivImage.setAttribute("class", "Cover-Image");
+    var Img0 = document.createElement("img");
+    Img0.setAttribute("loading", "lazy");
+    Img0.src = "https://beatsaver.com" + Data1[3];
+    DivImage.appendChild(Img0);
+    return DivImage;
+}
+
+function GenorateSongAndUserInfo(Data1) {
+    var DivSongAndUser = document.createElement("div");
+    DivSongAndUser.setAttribute("class", "SongAndUser-Info");
+    var A0 = document.createElement("a");
+    A0.setAttribute("href", "javascript:void(0)");
+    A0.setAttribute("style","font-size:21px");
+    A0.innerHTML = Data1[4];
+    DivSongAndUser.appendChild(A0);
+    var Div0 = document.createElement("div");
+    Div0.innerHTML = "Uploaded by ";
+    var A1 = document.createElement("a");
+    A1.setAttribute("href", "javascript:void(0)");
+    A1.setAttribute("onclick", "GetUserMaps(this)");
+    A1.setAttribute("Data-User-ID", Data1[5]._id);
+    A1.innerHTML = Data1[5].username;
+    Div0.appendChild(A1);
+    DivSongAndUser.appendChild(Div0);
+    return DivSongAndUser;
+}
+
+function GenorateMapStats(Data1, time1) {
+    var DivMapStats = document.createElement("div");
+    DivMapStats.setAttribute("class", "MapStats");
+    var Div1 = document.createElement("div");
+    var Div2 = document.createElement("div");
+    var Div3 = document.createElement("div");
+    var Div4 = document.createElement("div");
+    var Div5 = document.createElement("div");
+
+    var min = Math.floor(time1/60);
+    var sec = time1 % 60;
+    sec = sec < 10 ? "0" + sec : sec;
+    Div1.innerHTML = min + ":" + sec + " 🕔";
+
+    Div2.innerHTML = Intl.NumberFormat('en-US', {style: 'decimal'}).format(Data1[7].upVotes) + " 👍";
+    Div3.innerHTML = Intl.NumberFormat('en-US', {style: 'decimal'}).format(Data1[7].downVotes) + " 👎";
+    Div4.innerHTML = Intl.NumberFormat('en-US', {style: 'decimal'}).format(Data1[7].downloads) + " 💾";
+    var Rating = Data1[7].rating;
+    Rating = Math.round(Rating * 10000)/100;
+    Div5.innerHTML = Rating + "% 💯";
+    Div1.setAttribute("title", "Beatmap Duration");
+    Div2.setAttribute("title", "Upvotes");
+    Div3.setAttribute("title", "Downvotes");
+    Div4.setAttribute("title", "Downloads");
+    Div5.setAttribute("title", "Beatmap Rating");
+
+    DivMapStats.appendChild(Div1);
+    DivMapStats.appendChild(Div2);
+    DivMapStats.appendChild(Div3);
+    DivMapStats.appendChild(Div4);
+    DivMapStats.appendChild(Div5);
+    return DivMapStats;
+}
+
+function GenorateModes(Data1, time1){
+    var p = Data1[8].length;
+    var DivModes = document.createElement("div");
+    DivModes.setAttribute("class", "Modes")
+    
+    for (i=0; i<=p-1; i++){
+        var DivMode = document.createElement("div");
+        DivMode.setAttribute("class", "Mode");
+        var DivStandard = document.createElement("div");
+        DivStandard.setAttribute("class", "Standard");
+        var DivModeTitle = document.createElement("div");
+        DivModeTitle.innerHTML = Data1[8][i].name;
+        DivModeTitle.setAttribute("class", "Mode-Title");
+        var DivDifs = document.createElement("div");
+        DivDifs.setAttribute("class", "Difs");
+
+        if (Data1[8][i].difficulties.easy != null){
+            var DivEasy = document.createElement("div");
+            DivEasy.setAttribute("class", "Easy");
+            var Div6 = document.createElement("div");
+            Div6.innerHTML = "Easy";
+            var Div7 = document.createElement("div");
+            var NotesNumber  = Data1[8][i].difficulties.easy.notes;
+            var Nps = Math.round((NotesNumber/time1)*100)/100;
+            Div7.innerHTML = Nps + " NPS";
+            DivEasy.appendChild(Div6);
+            DivEasy.appendChild(Div7);
+            DivDifs.appendChild(DivEasy);
+        }
+        if (Data1[8][i].difficulties.normal != null){
+            var DivEasy = document.createElement("div");
+            DivEasy.setAttribute("class", "Normal");
+            var Div6 = document.createElement("div");
+            Div6.innerHTML = "Normal";
+            var Div7 = document.createElement("div");
+            var NotesNumber  = Data1[8][i].difficulties.normal.notes;
+            var Nps = Math.round((NotesNumber/time1)*100)/100;
+            Div7.innerHTML = Nps + " NPS";
+            DivEasy.appendChild(Div6);
+            DivEasy.appendChild(Div7);
+            DivDifs.appendChild(DivEasy);
+        }
+        if (Data1[8][i].difficulties.hard != null){
+            var DivEasy = document.createElement("div");
+            DivEasy.setAttribute("class", "Hard");
+            var Div6 = document.createElement("div");
+            Div6.innerHTML = "Hard";
+            var Div7 = document.createElement("div");
+            var NotesNumber  = Data1[8][i].difficulties.hard.notes;
+            var Nps = Math.round((NotesNumber/time1)*100)/100;
+            Div7.innerHTML = Nps + " NPS";
+            DivEasy.appendChild(Div6);
+            DivEasy.appendChild(Div7);
+            DivDifs.appendChild(DivEasy);
+        }
+        if (Data1[8][i].difficulties.expert != null){
+            var DivEasy = document.createElement("div");
+            DivEasy.setAttribute("class", "Expert");
+            var Div6 = document.createElement("div");
+            Div6.innerHTML = "Expert";
+            var Div7 = document.createElement("div");
+            var NotesNumber  = Data1[8][i].difficulties.expert.notes;
+            var Nps = Math.round((NotesNumber/time1)*100)/100;
+            Div7.innerHTML = Nps + " NPS";
+            DivEasy.appendChild(Div6);
+            DivEasy.appendChild(Div7);
+            DivDifs.appendChild(DivEasy);
+        }
+        if (Data1[8][i].difficulties.expertPlus != null){
+            var DivEasy = document.createElement("div");
+            DivEasy.setAttribute("class", "ExpertPlus");
+            var Div6 = document.createElement("div");
+            Div6.innerHTML = "expertPlus";
+            var Div7 = document.createElement("div");
+            var NotesNumber  = Data1[8][i].difficulties.expertPlus.notes;
+            var Nps = Math.round((NotesNumber/time1)*100)/100;
+            Div7.innerHTML = Nps + " NPS";
+            DivEasy.appendChild(Div6);
+            DivEasy.appendChild(Div7);
+            DivDifs.appendChild(DivEasy);
+        }
+        DivStandard.appendChild(DivModeTitle);
+        DivStandard.appendChild(DivDifs);
+        DivMode.appendChild(DivStandard);
+        DivModes.appendChild(DivMode);
+    }
+    return DivModes;
+}
+
+function GenorateDownloadStuff(Data1) {
+    var DivDownloadStuff = document.createElement("div");
+    DivDownloadStuff.setAttribute("class", "Download-Stuff");
+    var A2 = document.createElement("a");
+    A2.innerHTML = "Download";
+    var Dl = "https://beatsaver.com" + Data1[9];
+    A2.setAttribute("href", Dl);
+    var A3 = document.createElement("a");
+    A3.innerHTML = "OneClick™";
+    var Oc = "beatsaver://" + Data1[1];
+    A3.setAttribute("href", Oc);
+    var A4 = document.createElement("a");
+    A4.innerHTML = "3D preview";
+    var ThreeDPreview = "https://skystudioapps.com/bs-viewer/?id=" + Data1[1];
+    A4.setAttribute("href", ThreeDPreview);
+    A4.setAttribute("target", "_blank");
+    DivDownloadStuff.appendChild(A2);
+    DivDownloadStuff.appendChild(A4);
+    DivDownloadStuff.appendChild(A3);
+    return DivDownloadStuff;
 }
