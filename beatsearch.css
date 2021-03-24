@@ -284,6 +284,7 @@ input {
 .DisplayArea .SongSearch-ListDisplay .Simple-Song-Info .Modes .Mode {
     display: flex;
     flex-grow: 1;
+    flex-direction: column;
 }
 
 .DisplayArea .SongSearch-ListDisplay .Simple-Song-Info .Modes .Mode .Standard,
