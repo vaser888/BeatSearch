@@ -160,6 +160,7 @@ input {
     margin: 6px auto 0px auto;
     overflow-wrap: break-word;
     font-size: 24px;
+    border-radius: 4px;
 }
 
 .DisplayArea .SongSearch-ListDisplay {
@@ -221,17 +222,17 @@ input {
 .DisplayArea .SongSearch-ListDisplay .Simple-Song-Info .MapStats {
     display: flex;
     justify-content: space-evenly;
-    background-color: #e4b8b891;
     margin: 8px 8px;
 }
 
 .DisplayArea .SongSearch-ListDisplay .Simple-Song-Info .MapStats div {
-    border: 1px solid #aa5151;
     padding: 0px 2px;
+    box-shadow: 0px 0px 6px 2px #aa5151;
+    background-color: #e4b8b891;
 }
 
 .DisplayArea .SongSearch-ListDisplay .Simple-Song-Info .Difs,
-.SingleSong-Info .Simple-Song-Info .Difs {
+.SingleSong-Info .Difs {
     display: flex;
     justify-content: space-evenly;
     color: #fdfdfd;
@@ -240,7 +241,7 @@ input {
 }
 
 .DisplayArea .SongSearch-ListDisplay .Simple-Song-Info .Difs .Easy,
-.SingleSong-Info .Simple-Song-Info .Difs .Easy {
+.SingleSong-Info .Difs .Easy {
     padding: 4px 6px;
     text-align: center;
     background-color: #3cb371;
@@ -248,7 +249,7 @@ input {
 }
 
 .DisplayArea .SongSearch-ListDisplay .Simple-Song-Info .Difs .Normal,
-.SingleSong-Info .Simple-Song-Info .Difs .Normal {
+.SingleSong-Info .Difs .Normal {
     padding: 4px 6px;
     text-align: center;
     background-color: #59b0f4;
@@ -256,7 +257,7 @@ input {
 }
 
 .DisplayArea .SongSearch-ListDisplay .Simple-Song-Info .Difs .Hard,
-.SingleSong-Info .Simple-Song-Info .Difs .Hard {
+.SingleSong-Info .Difs .Hard {
     padding: 4px 6px;
     text-align: center;
     background-color: #ff6347;
@@ -264,7 +265,7 @@ input {
 }
 
 .DisplayArea .SongSearch-ListDisplay .Simple-Song-Info .Difs .Expert,
-.SingleSong-Info .Simple-Song-Info .Difs .Expert {
+.SingleSong-Info .Difs .Expert {
     padding: 4px 6px;
     text-align: center;
     background-color: #bf2a42;
@@ -272,7 +273,7 @@ input {
 }
 
 .DisplayArea .SongSearch-ListDisplay .Simple-Song-Info .Difs .ExpertPlus,
-.SingleSong-Info .Simple-Song-Info .Difs .ExpertPlus {
+.SingleSong-Info .Difs .ExpertPlus {
     padding: 4px 6px;
     text-align: center;
     background-color: #8f48db;
@@ -285,7 +286,7 @@ input {
 }
 
 .DisplayArea .SongSearch-ListDisplay .Simple-Song-Info .Modes .Mode .Standard,
-.SingleSong-Info .Simple-Song-Info .Modes .Mode .Standard {
+.SingleSong-Info .Modes .Mode .Standard {
     background-color:  #212123;
     margin: 8px;
     padding-bottom: 8px;
@@ -295,7 +296,7 @@ input {
 }
 
 .DisplayArea .SongSearch-ListDisplay .Simple-Song-Info .Modes .Mode .Standard .Mode-Title,
-.SingleSong-Info .Simple-Song-Info .Modes .Mode .Standard .Mode-Title {
+.SingleSong-Info .Modes .Mode .Standard .Mode-Title {
     margin-left: 10px;
     padding-top: 4px;
 }
@@ -317,7 +318,8 @@ border-radius: 6px;
 
 .DisplayArea .SingleSong-Info {
     background-color: #f0f0f0;
-
+    margin-top: 12px;
+    border-radius: 4px;
 }
 
 .DisplayArea .SingleSong-Info .Simple-Song-Info {
@@ -326,100 +328,110 @@ border-radius: 6px;
     justify-content: space-between;
 }
 
-.DisplayArea .SingleSong-Info .Simple-Song-Info img {
+.DisplayArea .SingleSong-Info img {
     width: 256px;
     height: 256px;
     margin: 16px 16px 4px 16px;
     box-shadow: 0px 10px 10px -6px;
 }
 
-.SingleSong-Info .Simple-Song-Info .Modes {
+.SingleSong-Info .Modes {
     display: flex;
     flex-direction: column;
     flex-wrap: wrap;
 }
 
-.SingleSong-Info .Simple-Song-Info .Modes .Mode {
-    display: flex;
-    max-width: max-content;
-}
-
-.SingleSong-Info .Simple-Song-Info .Simple-Song-Info-Container {
+.SingleSong-Info .Modes .Mode {
     display: flex;
 }
 
-.SingleSong-Info .Simple-Song-Info .Simple-Song-Info-Container .Left-Area {
+.SingleSong-Info .Simple-Song-Info-Container {
+    display: flex;
+}
+
+.SingleSong-Info .Simple-Song-Info-Container .Left-Area {
     display: flex;
     flex-direction: column;
 }
 
-.SingleSong-Info .Simple-Song-Info .Simple-Song-Info-Container .Left-Area .Cover-Image-Div {
+.SingleSong-Info .Simple-Song-Info-Container .Left-Area .Cover-Image-Div {
     display: flex;
     flex-direction: row;
     justify-content: center;
 }
 
-.SingleSong-Info .Simple-Song-Info .Simple-Song-Info-Container .Right-Area {
+.SingleSong-Info .Simple-Song-Info-Container .Right-Area {
     display: flex;
     flex-direction: column;
     box-shadow: -4px 0px 9px -5px;
+    flex-grow: 2;
 }
 
-.SingleSong-Info .Simple-Song-Info .Simple-Song-Info-Container .Right-Area .Top-Area {
+.SingleSong-Info .Simple-Song-Info-Container .Right-Area .Top-Area {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
 }
 
-.SingleSong-Info .Simple-Song-Info .Simple-Song-Info-Container .Right-Area .Top-Area .Date-Uploaded {
+.SingleSong-Info .Simple-Song-Info-Container .Right-Area .Top-Area .Song-Info {
+    padding: 10px;
+}
+
+.SingleSong-Info .Simple-Song-Info-Container .Right-Area .Top-Area .Date-Uploaded {
     padding: 6px 0px 0px 6px;
 }
 
-.SingleSong-Info .Simple-Song-Info .Simple-Song-Info-Container .Right-Area .Top-Area .MapStats {
+.SingleSong-Info .Simple-Song-Info-Container .Right-Area .Top-Area .MapStats {
     padding: 10px;
     align-self: center;
     border: 1px solid black;
     margin: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: end;
 }
 
-.SingleSong-Info .Simple-Song-Info .Simple-Song-Info-Container .Right-Area .Top-Area .MapStats div {
+.SingleSong-Info .Simple-Song-Info-Container .Right-Area .Top-Area .MapStats div {
     width: max-content;
 }
 
-.SingleSong-Info .Simple-Song-Info .Simple-Song-Info-Container .Right-Area .Song-Name-Stuff {
+.SingleSong-Info .Simple-Song-Info-Container .Right-Area .Song-Name-Stuff {
     display: flex;
     flex-direction: column;
     overflow-wrap: anywhere;
 }
 
-.SingleSong-Info .Simple-Song-Info .Simple-Song-Info-Container .Right-Area .Top-Area .SongAndUser-Info {
+.SingleSong-Info .Simple-Song-Info-Container .Right-Area .Top-Area .SongAndUser-Info a {
     overflow-wrap: anywhere;
+    text-decoration: none;
+    color: #451ba2;
 }
 
-.SingleSong-Info .Simple-Song-Info .Simple-Song-Info-Container .Right-Area .Middle-Area {
+.SingleSong-Info .Simple-Song-Info-Container .Right-Area .Middle-Area {
     padding: 10px; 
     background-color: #f9f9f9; 
     flex-grow: 1; 
     box-shadow: 0px -3px 10px -8px;
 }
 
-.SingleSong-Info .Simple-Song-Info .Simple-Song-Info-Container .Right-Area .Download-Stuff {
+.SingleSong-Info .Simple-Song-Info-Container .Right-Area .Download-Stuff {
     display: flex;
     border-top: 1px solid #a4a4a4;
 }
 
-.SingleSong-Info .Simple-Song-Info .Simple-Song-Info-Container .Right-Area .Middle-Area .Description {
+.SingleSong-Info .Simple-Song-Info-Container .Right-Area .Middle-Area .Description {
     overflow-wrap: anywhere;
 }
 
-.DisplayArea .SingleSong-Info .Simple-Song-Info .Download-Stuff a {
+.DisplayArea .Download-Stuff a {
     text-decoration: none;
     flex-grow: 2;
     text-align: center;
     padding: 6px 0px;
+    color: #451ba2;
 }
 
-.DisplayArea .SingleSong-Info .Simple-Song-Info .Download-Stuff a:hover {
+.DisplayArea .Download-Stuff a:hover {
     background-color: #d5d5d5;
     border-radius: 6px;
 }
