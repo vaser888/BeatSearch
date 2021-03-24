@@ -4,17 +4,20 @@ window.onload = function(){
     document.getElementById("Description").innerText = "ST-Style by Dubmood feat. Zabutom \r\n\r\nExpert+ : 4.61 NPS\r\nExpert   : 3.44 NPS\r\n\r\nIf you want to contact me then you can find me on the BSMG Discord server under the username vaser888\r\n\r\nThanks jafdy, 3stans and lapras for the playtests. this is a test for a long word and stuf olokkjhgkgkgkghkgkhgkjhgkjhgkjhgmbvbjhgkgkgkjhgkjhgkgkjgkjhgkjhgkjhgkjhgkjhgkjhgkjhgkjhgkhgkjhgkjhgkjhgkhgkjhgkhjg";
 
     if (history.state === null){
-        console.log("lol");
+        //console.log("lol");
     }
-    console.log(history.state, "onload");
+    //console.log(history.state, "onload");
+    Hot();
 }
 
 window.addEventListener('popstate', function (event) {
-    console.log(history.state, "popstate");
+    //console.log(history.state, "popstate");
     if (history.state != null){
         RefreshScreen();
+        document.getElementById("Footer-Nav").setAttribute("style", history.state.NavRam);
         GetData(history.state.Type ,history.state.SearchType, history.state.UserId, history.state.CurPageNum, history.state.SearchData);
-        document.getElementById(history.state.DisplayType).setAttribute("style", "display: '' ");
+        document.getElementById(history.state.DisplayType).setAttribute("style", "display:''");
+
         document.getElementById("PageNumber-Input").value = history.state.CurPageNum + 1;    
     }
 });
@@ -70,7 +73,7 @@ function GetData(MapsOrSearch, Type, User_Id, Page, SearchParameters) {
             }
         }
         else {
-            console.log("you got this!");
+            //console.log("you got this!");
             var i = [
                 JsonData0.metadata.levelAuthorName,
                 JsonData0.key,
@@ -87,14 +90,14 @@ function GetData(MapsOrSearch, Type, User_Id, Page, SearchParameters) {
                 JsonData0.metadata.songSubName,
                 JsonData0.metadata.levelAuthorName
             ];
-            console.log(i);
+            //console.log(i);
             CreateSingleSongInfo(i);
         }
         document.getElementById("NumberOfPages").innerHTML = "of " + (JsonData0.lastPage + 1);
         User_Id = User_Id.substring(0, User_Id.length - 1);
 
-        ReplaceHistoryState(MapsOrSearch, Type, User_Id, Page,  window.history.state.DisplayType, JsonData0.lastPage,  SearchParameters);
-        console.log(window.history.state);
+        ReplaceHistoryState(MapsOrSearch, Type, User_Id, Page,  window.history.state.DisplayType, JsonData0.lastPage,  SearchParameters, window.history.state.NavRam);
+        console.log("history state",window.history.state);
         
     }).catch(function(){
         console.log("Error: did not load for you");
@@ -262,9 +265,10 @@ function SearchInput() {
    
     var SearchBarInputValue = document.getElementById("Search-Bar-Input").value;
     SearchBarInputValue = "?q=" + SearchBarInputValue;
-    PushHistoryState("search", "text", "", "0", "SongSearch-ListDisplay", "", SearchBarInputValue);
+    PushHistoryState("search", "text", "", "0", "SongSearch-ListDisplay", "", SearchBarInputValue, "display: ''");
     RefreshScreen();
     document.getElementById(history.state.DisplayType).setAttribute("style", "display: '' ");
+    document.getElementById("Footer-Nav").setAttribute("style", "display:''");
     GetData("search","text", "", 0, SearchBarInputValue);
     document.getElementById("PageNumber-Input").value = "1";
     window.scrollTo(0,0);
@@ -275,9 +279,10 @@ function SearchInput() {
 function SearchKey() {
     event.preventDefault();
     var KeyInput = document.getElementById("Key-Search-Input").value;
-    PushHistoryState("search", "text", "", "0", "SingleSong-Info", "", KeyInput);
+    PushHistoryState("search", "text", "", "0", "SingleSong-Info", "", KeyInput, "display:none");
     RefreshScreen();
     document.getElementById(history.state.DisplayType).setAttribute("style", "display: '' ");
+    document.getElementById("Footer-Nav").setAttribute("style", "display:none");
 
     GetData("maps","detail","","",KeyInput);
     window.scrollTo(0,0);
@@ -302,7 +307,7 @@ function NextPage() {
     GetData(HistoryState.Type ,HistoryState.SearchType, HistoryState.UserId, n, HistoryState.SearchData);
 
     document.getElementById("PageNumber-Input").value = n + 1;
-    ReplaceHistoryState(HistoryState.Type, HistoryState.SearchType, HistoryState.UserId, n, HistoryState.DisplayType, "", HistoryState.SearchData);
+    ReplaceHistoryState(HistoryState.Type, HistoryState.SearchType, HistoryState.UserId, n, HistoryState.DisplayType, "", HistoryState.SearchData, "display:''");
     window.scrollTo(0,0);
 }
 
@@ -322,29 +327,31 @@ function PreviousPage() {
     GetData(HistoryState.Type ,HistoryState.SearchType, HistoryState.UserId, n, HistoryState.SearchData);
 
     document.getElementById("PageNumber-Input").value = n + 1;
-    ReplaceHistoryState(HistoryState.Type, HistoryState.SearchType, HistoryState.UserId, n, HistoryState.DisplayType, "", HistoryState.SearchData);
+    ReplaceHistoryState(HistoryState.Type, HistoryState.SearchType, HistoryState.UserId, n, HistoryState.DisplayType, "", HistoryState.SearchData, "display:''");
     window.scrollTo(0,0);
 }
 
 
 function Hot() {
-    PushHistoryState("maps", "hot", "", "0", "SongSearch-ListDisplay", "", "");
+    PushHistoryState("maps", "hot", "", "0", "SongSearch-ListDisplay", "", "", "display:''");
 
     console.log(history.state);
 
     RefreshScreen();
     document.getElementById("SongSearch-ListDisplay").setAttribute("style", "display: '' ");
+    document.getElementById("Footer-Nav").setAttribute("style", "display:''");
     document.getElementById("PageNumber-Input").value = "1";
     GetData("maps","hot", "", 0, "?automapper=1");
     window.scrollTo(0,0);
 }
 
 function Latest() {
-    PushHistoryState("maps", "latest", "", "0", "SongSearch-ListDisplay", "", "");
+    PushHistoryState("maps", "latest", "", "0", "SongSearch-ListDisplay", "", "", "display:''");
     console.log(history.state);
 
     RefreshScreen();
     document.getElementById("SongSearch-ListDisplay").setAttribute("style", "display: '' ");
+    document.getElementById("Footer-Nav").setAttribute("style", "display:''");
     document.getElementById("PageNumber-Input").value = "1";
     GetData("maps","latest", "", 0, "?automapper=1");
     window.scrollTo(0,0);
@@ -372,6 +379,7 @@ function GetUserMaps(UserId) {
     var User_id = UserId.getAttribute("data-user-id");
     RefreshScreen();
     document.getElementById("SongSearch-ListDisplay").setAttribute("style", "display: '' ");
+    document.getElementById("Footer-Nav").setAttribute("style", "display:''");
     GetData("maps", "uploader", User_id , 0, "");
     document.getElementById("PageNumber-Input").value = "1";
     window.scrollTo(0,0);
@@ -384,13 +392,13 @@ function LoadDetailMapInfo(MapKey) {
  SearchKey();
 }
 
-function ReplaceHistoryState(HistoryType,HistorySearchType, HistoryUserId, HistoryCurrentPageNumber, HistoryDisplayType, HistoryTotalPageNumber, HistorySearchData) {
-    let StateObj = {Type: HistoryType, SearchType: HistorySearchType, UserId: HistoryUserId, CurPageNum: HistoryCurrentPageNumber, DisplayType: HistoryDisplayType ,TotalPageNumber: HistoryTotalPageNumber, SearchData: HistorySearchData};
+function ReplaceHistoryState(HistoryType,HistorySearchType, HistoryUserId, HistoryCurrentPageNumber, HistoryDisplayType, HistoryTotalPageNumber, HistorySearchData, HistoryNavRam) {
+    let StateObj = {Type: HistoryType, SearchType: HistorySearchType, UserId: HistoryUserId, CurPageNum: HistoryCurrentPageNumber, DisplayType: HistoryDisplayType ,TotalPageNumber: HistoryTotalPageNumber, SearchData: HistorySearchData, NavRam: HistoryNavRam};
     window.history.replaceState(StateObj, "", "");
 }
 
-function PushHistoryState(HistoryType,HistorySearchType, HistoryUserId, HistoryCurrentPageNumber, HistoryDisplayType, HistoryTotalPageNumber, HistorySearchData) {
-    let StateObj = {Type: HistoryType, SearchType: HistorySearchType, UserId: HistoryUserId, CurPageNum: HistoryCurrentPageNumber, DisplayType: HistoryDisplayType ,TotalPageNumber: HistoryTotalPageNumber, SearchData: HistorySearchData};
+function PushHistoryState(HistoryType,HistorySearchType, HistoryUserId, HistoryCurrentPageNumber, HistoryDisplayType, HistoryTotalPageNumber, HistorySearchData, HistoryNavRam) {
+    let StateObj = {Type: HistoryType, SearchType: HistorySearchType, UserId: HistoryUserId, CurPageNum: HistoryCurrentPageNumber, DisplayType: HistoryDisplayType ,TotalPageNumber: HistoryTotalPageNumber, SearchData: HistorySearchData, NavRam: HistoryNavRam};
     window.history.pushState(StateObj, "", "");
 }
 
