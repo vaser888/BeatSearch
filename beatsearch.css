@@ -5,6 +5,11 @@ body, html {
     background-color: #37373a;
 }
 
+::placeholder, :-ms-input-placeholder, ::-ms-input-placeholder{
+    color: #f0f0f0;
+    opacity: 1;
+}
+
 .NavBar-Container {
     top: 0;
     left: 0;
