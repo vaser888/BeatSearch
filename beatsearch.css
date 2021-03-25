@@ -60,7 +60,6 @@ body, html {
     text-align: center; 
     height: 32px; 
     padding: 0px 6px 0px 0px; 
-
 }
 
 .NavBar-Container .NavBar .NavBar-Form {
@@ -200,6 +199,7 @@ input {
 .DisplayArea .SongSearch-ListDisplay .Simple-Song-Info img {
     max-width: 256px;
     max-height: 256px;
+    cursor: pointer;
 }
 
 .DisplayArea .SongSearch-ListDisplay .Simple-Song-Info .Header-Info {

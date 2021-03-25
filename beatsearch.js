@@ -446,6 +446,8 @@ function GenorateCoverImage(Data1) {
     DivImage.setAttribute("class", "Cover-Image");
     var Img0 = document.createElement("img");
     Img0.setAttribute("loading", "lazy");
+    Img0.setAttribute("onclick", "LoadDetailMapInfo(this)");
+    Img0.setAttribute("Data-Map-Key", Data1[1]);
     Img0.src = "https://beatsaver.com" + Data1[3];
     DivImage.appendChild(Img0);
     return DivImage;
