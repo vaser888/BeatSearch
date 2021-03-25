@@ -5,9 +5,17 @@ body, html {
     background-color: #37373a;
 }
 
-::placeholder, :-ms-input-placeholder, ::-ms-input-placeholder{
+::placeholder {
     color: #f0f0f0;
     opacity: 1;
+}
+
+:-ms-input-placeholder {
+    color: #f0f0f0;
+}
+
+::-ms-input-placeholder {
+    color: #f0f0f0;
 }
 
 .NavBar-Container {
