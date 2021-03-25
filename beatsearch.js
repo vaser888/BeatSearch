@@ -262,6 +262,7 @@ function SearchPage() {
     }
 
     GetData(HistoryState.Type ,HistoryState.SearchType, HistoryState.UserId , PageInputValue, HistoryState.SearchData);
+    window.scrollTo(0,0);
 }
 
 function SearchInput() {
