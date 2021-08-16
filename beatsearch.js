@@ -40,34 +40,40 @@ function GetData(MapsOrSearch, Type, User_Id, Page, SearchParameters) {
         alert("type something to search");
     }
     fetch("https://beatsaver.com/api/" + MapsOrSearch +"/" + Type +"/" + User_Id + Page + SearchParameters).then(function (r) { return r.json() }).then(function (JsonData0) {
-        //console.log(JsonData0);
+        console.log("json data", JsonData0);
+        console.log("history state",window.history.state);
         var t;  
 
-        var TotalMaps = JsonData0.totalDocs;
-        
+        var TotalMaps = JsonData0; 
+        //console.log(TotalMaps.docs.length);
         if (Type == "uploader"){
             var u = JsonData0.docs[0].uploader.username;
             CreateUploaderHeader(u, TotalMaps);
         }
 
-        if (TotalMaps>=25) {
-            TotalMaps = 25;
+        if (TotalMaps.length>=20) { //was 25 before
+            TotalMaps = 20;
         }
-        if (Type != "detail"){
+        //console.log(TotalMaps);
+        TotalMaps="20";
+        //Type = "detail";
+        console.log(Type);
+        if (Type != "id"){
+            
             for (x=0; x<=TotalMaps-1; x++){
                     t = JsonData0.docs[x];
 
                 var i = [
                     t.metadata.levelAuthorName,
-                    t.key,
+                    t.id,
                     t.uploaded,
-                    t.coverURL,
+                    t.versions[0].coverURL,
                     t.name,
-                    t.uploader,
+                    t.uploader.name,
                     t.metadata.duration,
                     t.stats,
-                    t.metadata.characteristics,
-                    t.downloadURL
+                    t.versions,
+                    t.versions[0].downloadURL
                 ];
                 var BotTest = i[0];
                 if (BotTest === "Beat Sage") {
@@ -80,29 +86,29 @@ function GetData(MapsOrSearch, Type, User_Id, Page, SearchParameters) {
         }
         else {
             var i = [
-                JsonData0.metadata.levelAuthorName,
-                JsonData0.key,
+                JsonData0.metadata.levelAuthorName, //
+                JsonData0.id,
                 JsonData0.uploaded,
-                JsonData0.coverURL,
+                JsonData0.versions[0].coverURL,
                 JsonData0.name,
-                JsonData0.uploader,
+                JsonData0.uploader.name,
                 JsonData0.metadata.duration,
                 JsonData0.stats,
-                JsonData0.metadata.characteristics,
+                JsonData0.versions, // get difficulties
                 JsonData0.description,
                 JsonData0.metadata.songName,
                 JsonData0.metadata.songAuthorName,
                 JsonData0.metadata.songSubName,
                 JsonData0.metadata.levelAuthorName
             ];
-            //console.log(i);
+            console.log("single",i);
             CreateSingleSongInfo(i);
         }
         document.getElementById("NumberOfPages").innerHTML = "of " + (JsonData0.lastPage + 1);
         User_Id = User_Id.substring(0, User_Id.length - 1);
 
         ReplaceHistoryState(MapsOrSearch, Type, User_Id, Page,  window.history.state.DisplayType, JsonData0.lastPage,  SearchParameters, window.history.state.NavRam);
-        //console.log("history state",window.history.state);
+        console.log("history state",window.history.state);
         
     }).catch(function(){
         console.log("Error: did not load for you");
@@ -145,8 +151,8 @@ function CreateSimpleSongInfo(Data0) {
     var DivMapStats = GenorateMapStats(Data0, time, false);
     DivSimpleSongInfo.appendChild(DivMapStats);
     //Modes
-    var DivModes = GenorateModes(Data0, time);
-    DivSimpleSongInfo.appendChild(DivModes);
+    //var DivModes = GenorateModes(Data0, time);
+    //DivSimpleSongInfo.appendChild(DivModes);
     //Download stuff
     var DivDownloadStuff = GenorateDownloadStuff(Data0);
     DivSimpleSongInfo.appendChild(DivDownloadStuff);
@@ -155,6 +161,7 @@ function CreateSimpleSongInfo(Data0) {
 }
 
 function CreateSingleSongInfo(Data0){
+
     var DivSimpleSongInfoContainer = document.createElement("div");
     DivSimpleSongInfoContainer.setAttribute("class", "Simple-Song-Info-Container");
 
@@ -169,9 +176,9 @@ function CreateSingleSongInfo(Data0){
     DivImage0.setAttribute("class", "Cover-Image-Div");
     var DivImage = GenorateCoverImage(Data0);
     DivImage0.appendChild(DivImage);
-    var DivModes = GenorateModes(Data0, time);
+    //var DivModes = GenorateModes(Data0, time);
     DivLeftArea.appendChild(DivImage0);
-    DivLeftArea.appendChild(DivModes);
+    //DivLeftArea.appendChild(DivModes);
 
     DivSimpleSongInfoContainer.appendChild(DivLeftArea);
     //right area
@@ -282,12 +289,12 @@ function SearchInput() {
 function SearchKey() {
     event.preventDefault();
     var KeyInput = document.getElementById("Key-Search-Input").value;
-    PushHistoryState("search", "text", "", "0", "SingleSong-Info", "", KeyInput, "display:none");
+    PushHistoryState("detail", "text", "", "0", "SingleSong-Info", "", KeyInput, "display:none");
     RefreshScreen();
     document.getElementById(history.state.DisplayType).setAttribute("style", "display: '' ");
     document.getElementById("Footer-Nav").setAttribute("style", "display:none");
 
-    GetData("maps","detail","","",KeyInput);
+    GetData("maps","id","","",KeyInput);
     window.scrollTo(0,0);
     //"2365"
 }
@@ -343,7 +350,7 @@ function Hot() {
     document.getElementById("SongSearch-ListDisplay").setAttribute("style", "display: '' ");
     document.getElementById("Footer-Nav").setAttribute("style", "display:''");
     document.getElementById("PageNumber-Input").value = "1";
-    GetData("maps","hot", "", 0, "?automapper=1");
+    GetData("search","text", "", 0, "?sortOrder=Relevance");
     window.scrollTo(0,0);
 }
 
@@ -355,11 +362,12 @@ function Latest() {
     document.getElementById("SongSearch-ListDisplay").setAttribute("style", "display: '' ");
     document.getElementById("Footer-Nav").setAttribute("style", "display:''");
     document.getElementById("PageNumber-Input").value = "1";
-    GetData("maps","latest", "", 0, "?automapper=1");
+    GetData("search","text", "", 0, "?sortOrder=Latest");
     window.scrollTo(0,0);
 }
 
 function RefreshScreen() {
+    //deletes all the main divs and replaces them
     document.getElementById("SongSearch-ListDisplay").remove();
     document.getElementById("SingleSong-Info").remove(); 
     document.getElementById("MapperHeader").innerHTML = "";
@@ -448,7 +456,7 @@ function GenorateCoverImage(Data1) {
     Img0.setAttribute("loading", "lazy");
     Img0.setAttribute("onclick", "LoadDetailMapInfo(this)");
     Img0.setAttribute("Data-Map-Key", Data1[1]);
-    Img0.src = "https://beatsaver.com" + Data1[3];
+    Img0.src = Data1[3];
     DivImage.appendChild(Img0);
     return DivImage;
 }
@@ -477,7 +485,7 @@ function GenorateSongAndUserInfo(Data1, FontSize, TitleClick) {
     A1.setAttribute("href", "javascript:void(0)");
     A1.setAttribute("onclick", "GetUserMaps(this)");
     A1.setAttribute("Data-User-ID", Data1[5]._id);
-    A1.innerHTML = Data1[5].username;
+    A1.innerHTML = Data1[5];
     Div0.appendChild(A1);
     DivSongAndUser.appendChild(Div0);
     return DivSongAndUser;
@@ -497,10 +505,10 @@ function GenorateMapStats(Data1, time1, Single) {
     sec = sec < 10 ? "0" + sec : sec;
     Div1.innerHTML = min + ":" + sec + " 🕔";
 
-    Div2.innerHTML = Intl.NumberFormat('en-US', {style: 'decimal'}).format(Data1[7].upVotes) + " 👍";
-    Div3.innerHTML = Intl.NumberFormat('en-US', {style: 'decimal'}).format(Data1[7].downVotes) + " 👎";
+    Div2.innerHTML = Intl.NumberFormat('en-US', {style: 'decimal'}).format(Data1[7].upvotes) + " 👍";
+    Div3.innerHTML = Intl.NumberFormat('en-US', {style: 'decimal'}).format(Data1[7].downvotes) + " 👎";
     Div4.innerHTML = Intl.NumberFormat('en-US', {style: 'decimal'}).format(Data1[7].downloads) + " 💾";
-    var Rating = Data1[7].rating;
+    var Rating = Data1[7].score;
     Rating = Math.round(Rating * 10000)/100;
     Div5.innerHTML = Rating + "% 💯";
     Div1.setAttribute("title", "Beatmap Duration");
@@ -617,7 +625,7 @@ function GenorateDownloadStuff(Data1) {
     DivDownloadStuff.setAttribute("class", "Download-Stuff");
     var A2 = document.createElement("a");
     A2.innerHTML = "Download";
-    var Dl = "https://beatsaver.com" + Data1[9];
+    var Dl = Data1[8][0].downloadURL; //download url
     A2.setAttribute("href", Dl);
     var A3 = document.createElement("a");
     A3.innerHTML = "OneClick™";
